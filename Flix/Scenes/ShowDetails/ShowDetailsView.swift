@@ -1,0 +1,281 @@
+//
+//  ShowDetailsView.swift
+//  Flix
+//
+//  Created by NJ Development on 02/08/25.
+//
+
+import UIKit
+import SDWebImage
+
+protocol ShowDetailsViewDelegate: AnyObject {
+    func didTapSeasonsButton()
+    func didTapCastButton()
+}
+
+final class ShowDetailsView: UIView {
+    
+    // MARK: - Properties
+    weak var delegate: ShowDetailsViewDelegate?
+    
+    // MARK: - Private Properties
+    private struct Constants {
+        static let small: CGFloat = 8
+        static let medium: CGFloat = 16
+        static let large: CGFloat = 44
+        static let ratingSize = CGSize(width: 10, height: 10)
+    }
+    
+    // MARK: - UI Components
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var coverImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
+        return imageView
+    }()
+    
+    lazy var titleLabel: NJLabel = {
+        let label = NJLabel(
+            textAlignment: .center,
+            textColor: .label,
+            fontSize: 24,
+            fontWeight: .bold
+        )
+        return label
+    }()
+    
+    lazy var genresLabel: NJLabel = {
+        let label = NJLabel(
+            textColor: .secondaryLabel,
+            fontSize: 16
+        )
+        return label
+    }()
+    
+    lazy var premieredLabel: NJLabel = {
+        let label = NJLabel(
+            textColor: .systemBlue,
+            fontSize: 14
+        )
+        return label
+    }()
+    
+    lazy var statusLabel: NJLabel = {
+        let label = NJLabel(
+            textAlignment: .left,
+            textColor: .systemBlue,
+            fontSize: 14
+        )
+        return label
+    }()
+    
+    lazy var durationStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [premieredLabel, statusLabel])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.spacing = 1
+        stack.distribution = .fillEqually
+        stack.axis = .vertical
+        return stack
+    }()
+    
+    lazy var ratingImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .systemYellow
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame.size = Constants.ratingSize
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        return imageView
+    }()
+    
+    lazy var ratingLabel: NJLabel = {
+        let label = NJLabel(
+            textAlignment: .right,
+            textColor: .secondaryLabel,
+            fontSize: 14
+        )
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        return label
+    }()
+    
+    lazy var ratingStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [ratingImageView, ratingLabel])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.distribution = .fill
+        stack.alignment = .center
+        stack.spacing = 5
+        stack.axis = .horizontal
+        return stack
+    }()
+    
+    lazy var showInfoStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [durationStack, ratingStack])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.distribution = .fill
+        stack.axis = .horizontal
+        return stack
+    }()
+    
+    lazy var summaryLabel: NJLabel = {
+        let label = NJLabel(
+            textAlignment: .justified,
+            textColor: .label,
+            fontSize: 16
+        )
+        return label
+    }()
+
+    lazy var episodesButton: NJButton = {
+        let button = NJButton(
+            backgroundColor: .systemBlue,
+            title: "Ver Temporadas",
+            target: self,
+            action: #selector(episodesButtonTapped)
+        )
+        return button
+    }()
+    
+    lazy var castButton: NJButton = {
+        let button = NJButton(
+            backgroundColor: .systemGreen,
+            title: "Ver Elenco",
+            target: self,
+            action: #selector(castButtonTapped)
+        )
+        return button
+    }()
+    
+    lazy var buttonsStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [episodesButton, castButton])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 12
+        stack.distribution = .fillEqually
+        return stack
+    }()
+    
+    // MARK: - Initialization
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .systemBackground
+        setupHierarchy()
+        setupConstraints()
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
+    
+    // MARK: - Private Methods
+    
+    private func setupHierarchy() {
+        addSubviews(scrollView, buttonsStack)
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubviews(
+            coverImageView,
+            titleLabel,
+            genresLabel,
+            showInfoStack,
+            summaryLabel
+        )
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            // Buttons Stack (fixo no bottom)
+            buttonsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.medium),
+            buttonsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.medium),
+            buttonsStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.medium),
+            
+            // Episodes Button
+            episodesButton.heightAnchor.constraint(equalToConstant: Constants.large),
+            
+            // Cast Button
+            castButton.heightAnchor.constraint(equalToConstant: Constants.large),
+            
+            // ScrollView (não vai até o bottom, deixa espaço para os botões)
+            scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: buttonsStack.topAnchor, constant: -Constants.medium),
+            
+            // ContentView
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            // Cover Image
+            coverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.medium),
+            coverImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
+            coverImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
+            coverImageView.heightAnchor.constraint(equalTo: coverImageView.widthAnchor, multiplier: 0.6),
+            
+            // Title
+            titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.medium),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
+            
+            // Genres
+            genresLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.small),
+            genresLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
+            genresLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
+            
+            // Status
+            showInfoStack.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: Constants.small),
+            showInfoStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
+            showInfoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
+            
+            // Summary
+            summaryLabel.topAnchor.constraint(equalTo: showInfoStack.bottomAnchor, constant: Constants.medium),
+            summaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
+            summaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
+            summaryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.medium)
+        ])
+    }
+    
+    // MARK: - Public Methods
+    
+    func configureData(with show: TVShow) {
+        titleLabel.text = show.name
+        genresLabel.text = show.genres.joined(separator: " • ")
+        premieredLabel.text = dateFormat(text: "Premiered:", show.premiered ?? "N/A")
+        statusLabel.text = dateFormat(text: "Status: \(show.status)", show.ended ?? "N/A")
+        statusLabel.textColor = show.status == "Ended" ? .tertiaryLabel : .systemGreen
+        ratingImageView.setRating(show.rating.average ?? 0)
+        ratingLabel.text = "\(show.rating.average ?? 0)"
+        summaryLabel.text = show.summary.removingHTMLOccurances
+        
+        if let url = URL(string: show.originalPosterImage) {
+            coverImageView.sd_setImage(with: url)
+        }
+    }
+    
+    // MARK: - Public Methods
+    
+    @objc private func episodesButtonTapped() {
+        delegate?.didTapSeasonsButton()
+    }
+    
+    @objc private func castButtonTapped() {
+        delegate?.didTapCastButton()
+    }
+}

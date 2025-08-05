@@ -1,0 +1,43 @@
+//
+//  NJLabel.swift
+//  Flix
+//
+//  Created by NJ Development on 03/08/25.
+//
+
+import Foundation
+import Foundation
+import UIKit
+
+class NJLabel: UILabel {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configure()
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
+    
+    init(
+        textAlignment: NSTextAlignment = .left,
+        textColor: UIColor?,
+        fontSize: CGFloat,
+        fontWeight: UIFont.Weight = .regular,
+        numberOfLines: Int = 0
+    ) {
+        super.init(frame: .zero)
+        self.textAlignment = textAlignment
+        self.textColor = textColor
+        self.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
+        self.numberOfLines = numberOfLines
+        configure()
+    }
+    
+    private func configure() {
+        adjustsFontSizeToFitWidth = true
+        minimumScaleFactor = 0.9
+        lineBreakMode = .byTruncatingTail
+        translatesAutoresizingMaskIntoConstraints = false
+    }
+}

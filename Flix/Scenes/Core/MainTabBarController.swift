@@ -20,16 +20,16 @@ final class MainTabBarController: UITabBarController {
         let showsNavigationController = UINavigationController(rootViewController: ShowViewController())
         showsNavigationController.tabBarItem = UITabBarItem(
             title: "Shows",
-            image: UIImage(systemName: "tv"),
-            selectedImage: UIImage(systemName: "tv.fill")
+            image: UIImage(icon: .tv),
+            selectedImage: UIImage(icon: .tvFill)
         )
         
         // Favorites Tab
         let favoritesNavigationController = UINavigationController(rootViewController: FavoritesViewController())
         favoritesNavigationController.tabBarItem = UITabBarItem(
             title: "Favorites",
-            image: UIImage(systemName: "heart"),
-            selectedImage: UIImage(systemName: "heart.fill")
+            image: UIImage(icon: .heart),
+            selectedImage: UIImage(icon: .heartFill)
         )
         
         // Set view controllers

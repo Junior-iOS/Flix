@@ -33,9 +33,6 @@ final class ShowViewModel: ShowViewModelProtocol {
     private let isLoadingRelay = BehaviorRelay<Bool>(value: false)
     private let showsRelay = BehaviorRelay<[TVShow]>(value: [])
     
-    // MARK: - Coordinator
-    weak var coordinator: ShowsCoordinator?
-    
     // MARK: - Properties
     var shows: Driver<[TVShow]> {
         showsRelay.asDriver()
@@ -63,7 +60,7 @@ final class ShowViewModel: ShowViewModelProtocol {
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão com a internet")
             let error = NetworkError.noConnection
-            coordinator?.showError(error)
+//            coordinator?.showError(error)
             return Single.error(error)
         }
         
@@ -86,7 +83,7 @@ final class ShowViewModel: ShowViewModelProtocol {
             }, onError: { [weak self] error in
                 print("❌ Fetch Error: \(error)")
                 self?.isLoadingRelay.accept(false)
-                self?.coordinator?.showError(error)
+//                self?.coordinator?.showError(error)
             }, onSubscribe: { [weak self] in
                 self?.isLoadingRelay.accept(true)
             })

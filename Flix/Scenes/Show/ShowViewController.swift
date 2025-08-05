@@ -15,10 +15,8 @@ final class ShowViewController: UIViewController {
     private let searchController = UISearchController(searchResultsController: nil)
     private let refreshControl = UIRefreshControl()
     private let networkMonitor = NetworkMonitor.shared
-    
-    // MARK: - Coordinator
-    weak var coordinator: ShowsCoordinator?
-    
+
+    // MARK: - Init
     init(viewModel: ShowViewModel = ShowViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -106,7 +104,7 @@ final class ShowViewController: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 self?.refreshControl.endRefreshing()
             }
-            coordinator?.showNoConnectionAlert()
+//            coordinator?.showNoConnectionAlert()
             return
         }
         
@@ -150,14 +148,6 @@ final class ShowViewController: UIViewController {
             var config = UIContentUnavailableConfiguration.empty()
             config.image = .init(systemName: "movieclapper")
             config.text = "Sem Séries"
-            
-//            let searchText = searchController.searchBar.text ?? ""
-//
-//            if searchText.isEmpty {
-//                config.secondaryText = "Nenhuma série encontrada."
-//            } else {
-//                config.secondaryText = "Não há séries com o título '\(searchText)'"
-//            }
             contentUnavailableConfiguration = config
         } else {
             contentUnavailableConfiguration = nil
@@ -173,29 +163,10 @@ extension ShowViewController: UICollectionViewDelegate {
         let show = viewModel.cellForItem(at: indexPath)
         
         // Usa o coordinator para navegação
-        coordinator?.showShowDetail(show: show)
+//        coordinator?.showShowDetail(show: show)
+        let controller = ShowDetailViewController(show: show)
+        navigationController?.pushViewController(controller, animated: true)
     }
-    
-    //MARK: PAGINATION
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let offsetY = scrollView.contentOffset.y
-//        let contentHeight = scrollView.contentSize.height
-//        let height = scrollView.frame.size.height
-//        
-//        // Carrega mais quando está próximo ao final (últimos 20% do conteúdo)
-//        let threshold = contentHeight - height * 1.2
-//        
-//        if offsetY > threshold {
-//            // Calcula o índice atual baseado na posição do scroll
-//            let cellHeight = height / 3 // Aproximação da altura da célula
-//            let currentIndex = Int(offsetY / cellHeight)
-//            
-//            if viewModel.shouldLoadMore(currentIndex: currentIndex) {
-//                print("📄 Scroll detectado - carregando mais shows... (offsetY: \(offsetY), threshold: \(threshold))")
-//                viewModel.loadMoreShows()
-//            }
-//        }
-//    }
 }
 
 // MARK: SEARCH BAR

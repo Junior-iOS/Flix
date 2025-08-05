@@ -10,10 +10,7 @@ import RxSwift
 
 final class FavoritesViewController: UIViewController {
     private let disposeBag = DisposeBag()
-    
-    // MARK: - Coordinator
-    weak var coordinator: FavoritesCoordinator?
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()

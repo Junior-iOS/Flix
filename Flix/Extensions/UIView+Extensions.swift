@@ -19,18 +19,6 @@ extension UIView {
         view.layer.shadowRadius = 5.0
     }
     
-    func formatBirthday(_ birthday: String) -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd"
-        
-        if let birthDate = dateFormatter.date(from: birthday) {
-            dateFormatter.dateFormat = "dd/MM/yyyy"
-            return dateFormatter.string(from: birthDate)
-        } else {
-            return nil
-        }
-    }
-    
     func calculateAge(from birthday: String) -> Int? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"
@@ -44,5 +32,16 @@ extension UIView {
         let ageComponents = calendar.dateComponents([.year], from: birthDate, to: currentDate)
         
         return ageComponents.year
+    }
+    
+    func dateFormat(text: String = "", _ date: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        
+        if let birthDate = dateFormatter.date(from: date) {
+            dateFormatter.dateFormat = "dd/MM/yyyy"
+            return text + " " + dateFormatter.string(from: birthDate)
+        }
+        return text
     }
 }
