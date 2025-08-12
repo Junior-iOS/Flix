@@ -96,15 +96,11 @@ final class ShowViewController: UIViewController {
     }
     
     @objc private func refreshData() {
-        print("🔄 Pull-to-refresh iniciado")
-        
-        // Verifica conectividade antes de fazer refresh
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão - cancelando refresh")
             DispatchQueue.main.async { [weak self] in
                 self?.refreshControl.endRefreshing()
             }
-//            coordinator?.showNoConnectionAlert()
             return
         }
         
@@ -161,10 +157,8 @@ extension ShowViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let show = viewModel.cellForItem(at: indexPath)
-        
-        // Usa o coordinator para navegação
-//        coordinator?.showShowDetail(show: show)
-        let controller = ShowDetailViewController(show: show)
+        let viewModel = ShowDetailsViewModel(show: show)
+        let controller = ShowDetailViewController(viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
 }
@@ -180,30 +174,23 @@ extension ShowViewController: UISearchResultsUpdating {
     }
 }
 
+// MARK: - UISearchBarDelegate
 extension ShowViewController: UISearchBarDelegate {
-    
+
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("🔘 SearchBar Cancel button clicked")
-        // Quando o cancel é pressionado, limpa a busca
         searchBar.text = ""
         viewModel.searchBar(textDidChange: "")
         
-        // Só refaz o fetch se realmente não temos dados originais
         if viewModel.shouldRefetchData() {
-            print("🔄 Refazendo fetch - não há dados originais")
             fetchShows()
-        } else {
-            print("✅ Não refazendo fetch - já temos dados originais")
         }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // Esconde o teclado quando a busca é confirmada
         searchBar.resignFirstResponder()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Atualiza a busca em tempo real
         viewModel.searchBar(textDidChange: searchText)
     }
 }

@@ -56,11 +56,9 @@ final class ShowViewModel: ShowViewModelProtocol {
     // MARK: - Methods
     
     func fetchTVShows() -> Single<[TVShow]> {
-        // Verifica conectividade antes de fazer a requisição
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão com a internet")
             let error = NetworkError.noConnection
-//            coordinator?.showError(error)
             return Single.error(error)
         }
         
@@ -69,11 +67,9 @@ final class ShowViewModel: ShowViewModelProtocol {
         return service.getShows(page: currentPage)
             .do(onSuccess: { [weak self] shows in
                 if self?.currentPage == 1 {
-                    // Primeira página - substitui os dados
                     self?.originalShows = shows
                     self?.showsRelay.accept(shows)
                 } else {
-                    // Páginas subsequentes - adiciona aos dados existentes
                     self?.originalShows.append(contentsOf: shows)
                     self?.showsRelay.accept(self?.originalShows ?? [])
                 }
@@ -83,7 +79,6 @@ final class ShowViewModel: ShowViewModelProtocol {
             }, onError: { [weak self] error in
                 print("❌ Fetch Error: \(error)")
                 self?.isLoadingRelay.accept(false)
-//                self?.coordinator?.showError(error)
             }, onSubscribe: { [weak self] in
                 self?.isLoadingRelay.accept(true)
             })
@@ -112,7 +107,6 @@ final class ShowViewModel: ShowViewModelProtocol {
     }
     
     func refreshData() -> Single<[TVShow]> {
-        print("🔄 Refresh solicitado - resetando dados e refazendo fetch")
         resetData()
         return fetchTVShows()
     }

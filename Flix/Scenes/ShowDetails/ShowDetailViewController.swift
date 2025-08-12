@@ -10,8 +10,8 @@ import UIKit
 final class ShowDetailViewController: UIViewController {
     
     // MARK: - Private Properties
-    private let show: TVShow
     private let detailView = ShowDetailsView()
+    private let viewModel: ShowDetailsViewModelProtocol
     
     // MARK: - Init
     
@@ -19,8 +19,8 @@ final class ShowDetailViewController: UIViewController {
         view = detailView
     }
     
-    init(show: TVShow) {
-        self.show = show
+    init(_ viewModel: ShowDetailsViewModelProtocol) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,9 +36,9 @@ final class ShowDetailViewController: UIViewController {
     // MARK: - Private Methods
     
     private func configureData() {
-        title = show.name
+        title = viewModel.title
         detailView.delegate = self
-        detailView.configureData(with: show)
+        detailView.configureData(with: viewModel.show)
     }
 }
 
@@ -46,7 +46,9 @@ final class ShowDetailViewController: UIViewController {
 
 extension ShowDetailViewController: ShowDetailsViewDelegate {
     func didTapSeasonsButton() {
-        print("Seasons Tapped")
+        let viewModel = ShowSeasonsViewModel(show: viewModel.show)
+        let controller = ShowSeasonsViewController(viewModel: viewModel)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func didTapCastButton() {

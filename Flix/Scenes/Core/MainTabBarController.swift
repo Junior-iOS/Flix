@@ -31,11 +31,8 @@ final class MainTabBarController: UITabBarController {
             image: UIImage(icon: .heart),
             selectedImage: UIImage(icon: .heartFill)
         )
-        
-        // Set view controllers
+
         viewControllers = [showsNavigationController, favoritesNavigationController]
-        
-        // Define a primeira aba como selecionada (Shows)
         selectedIndex = 0
     }
     

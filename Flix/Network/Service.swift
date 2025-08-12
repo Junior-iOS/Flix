@@ -110,7 +110,6 @@ final class Service: ServiceProtocol {
         do {
             let (data, response) = try await session.data(for: request)
             
-            // Verifica se a resposta HTTP é válida
             if let httpResponse = response as? HTTPURLResponse {
                 guard (200...299).contains(httpResponse.statusCode) else {
                     throw ServiceError.httpError(httpResponse.statusCode)

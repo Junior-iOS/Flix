@@ -258,7 +258,7 @@ final class ShowDetailsView: UIView {
         titleLabel.text = show.name
         genresLabel.text = show.genres.joined(separator: " • ")
         premieredLabel.text = dateFormat(text: "Premiered:", show.premiered ?? "N/A")
-        statusLabel.text = dateFormat(text: "Status: \(show.status)", show.ended ?? "N/A")
+        statusLabel.text = dateFormat(text: "\(show.status)", show.ended ?? "N/A")
         statusLabel.textColor = show.status == "Ended" ? .tertiaryLabel : .systemGreen
         ratingImageView.setRating(show.rating.average ?? 0)
         ratingLabel.text = "\(show.rating.average ?? 0)"
