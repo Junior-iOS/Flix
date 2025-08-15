@@ -12,6 +12,10 @@ extension UIView {
         views.forEach { addSubview($0) }
     }
     
+    static var identifier: String {
+        String(describing: self)
+    }
+    
     func applyShadow(view: UIView) {
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOffset = CGSize(width: 5, height: 5)

@@ -23,6 +23,7 @@ final class ShowDetailsView: UIView {
         static let small: CGFloat = 8
         static let medium: CGFloat = 16
         static let large: CGFloat = 44
+        static let coverHeight: CGFloat = 350
         static let ratingSize = CGSize(width: 10, height: 10)
     }
     
@@ -37,6 +38,15 @@ final class ShowDetailsView: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .systemOrange
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        indicator.startAnimating()
+        return indicator
     }()
     
     lazy var coverImageView: UIImageView = {
@@ -185,8 +195,9 @@ final class ShowDetailsView: UIView {
     // MARK: - Private Methods
     
     private func setupHierarchy() {
-        addSubviews(scrollView, buttonsStack)
+        addSubviews(scrollView, buttonsStack, activityIndicator)
         scrollView.addSubview(contentView)
+//        coverImageView.addSubview(activityIndicator)
         
         contentView.addSubviews(
             coverImageView,
@@ -225,9 +236,13 @@ final class ShowDetailsView: UIView {
             
             // Cover Image
             coverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.medium),
-            coverImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
-            coverImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
-            coverImageView.heightAnchor.constraint(equalTo: coverImageView.widthAnchor, multiplier: 0.6),
+            coverImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            coverImageView.widthAnchor.constraint(equalToConstant: 300),
+            coverImageView.heightAnchor.constraint(equalToConstant: Constants.coverHeight),
+            
+            // Activity Indicator
+            activityIndicator.centerXAnchor.constraint(equalTo: coverImageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor),
             
             // Title
             titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.medium),
@@ -263,9 +278,18 @@ final class ShowDetailsView: UIView {
         ratingImageView.setRating(show.rating.average ?? 0)
         ratingLabel.text = "\(show.rating.average ?? 0)"
         summaryLabel.text = show.summary.removingHTMLOccurances
-        
+
         if let url = URL(string: show.originalPosterImage) {
-            coverImageView.sd_setImage(with: url)
+            coverImageView.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(icon: .photoBadgeExclamationmarkFill),
+                options: [.continueInBackground, .scaleDownLargeImages]
+            ) { [weak self] _, _, _, _ in
+                self?.activityIndicator.stopAnimating()
+            }
+        } else {
+            coverImageView.image = UIImage(icon: .photoBadgeExclamationmarkFill)
+            activityIndicator.stopAnimating()
         }
     }
     

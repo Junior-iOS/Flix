@@ -11,7 +11,6 @@ import SDWebImage
 class ShowCell: UICollectionViewCell {
     
     // MARK: - Properties
-    static let identifier = "ShowCell"
     
     lazy var coverImageView: UIImageView = {
         let imageView = UIImageView()
