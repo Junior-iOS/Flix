@@ -46,8 +46,8 @@ final class ShowDetailViewController: UIViewController {
 
 extension ShowDetailViewController: ShowDetailsViewDelegate {
     func didTapSeasonsButton() {
-        let viewModel = ShowSeasonsViewModel(show: viewModel.show)
-        let controller = ShowSeasonsViewController(viewModel: viewModel)
+        let showSeasonsViewModel = ShowSeasonsViewModel(show: viewModel.show)
+        let controller = ShowSeasonsViewController(viewModel: showSeasonsViewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
     

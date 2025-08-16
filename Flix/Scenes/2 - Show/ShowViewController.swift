@@ -80,6 +80,16 @@ final class ShowViewController: UIViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
+        
+        // Estilo da barra de busca para branco
+        searchController.searchBar.barStyle = .black
+        searchController.searchBar.tintColor = .label
+        searchController.searchBar.searchTextField.textColor = .label
+        searchController.searchBar.searchTextField.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        definesPresentationContext = true
     }
     
     private func configureRefreshControl() {
@@ -145,8 +155,8 @@ extension ShowViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let show = viewModel.cellForItem(at: indexPath)
-        let viewModel = ShowDetailsViewModel(show: show)
-        let controller = ShowDetailViewController(viewModel)
+        let showDetailsViewModel = ShowDetailsViewModel(show: show)
+        let controller = ShowDetailViewController(showDetailsViewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
 }

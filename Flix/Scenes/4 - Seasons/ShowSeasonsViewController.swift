@@ -65,8 +65,8 @@ final class ShowSeasonsViewController: UIViewController {
 // MARK: - ShowSeasonsViewDelegate
 extension ShowSeasonsViewController: ShowSeasonsViewDelegate {
     func didSelectSeason(_ season: SeasonItem) {
-        let viewModel = EpisodesViewModel(show: viewModel.show, season: season)
-        let controller = EpisodesViewController(viewModel: viewModel)
+        let episodesViewModel = EpisodesViewModel(show: viewModel.show, season: season)
+        let controller = EpisodesViewController(viewModel: episodesViewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
 }

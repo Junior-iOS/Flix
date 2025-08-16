@@ -11,6 +11,7 @@ final class SeasonCell: UICollectionViewCell {
     private let seasonImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .label
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
@@ -90,7 +91,7 @@ final class SeasonCell: UICollectionViewCell {
     func configure(with item: ShowSeasonsView.SeasonItem) {
         seasonImageView.sd_setImage(with: URL(string: item.imageURL ?? "")) { [weak self] image, _, _, _ in
             guard let self = self else { return }
-            if image == nil { self.seasonImageView.image = UIImage(icon: .photoBadgeExclamationmarkFill) }
+            if image == nil { self.seasonImageView.image = UIImage(icon: .exclamationMarkIcloud) }
             self.activityIndicator.stopAnimating()
         }
         badgeLabel.text = "T\(item.seasonNumber)"

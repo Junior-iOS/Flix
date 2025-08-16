@@ -53,6 +53,7 @@ final class ShowDetailsView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.tintColor = .label
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 12
         return imageView
@@ -281,13 +282,13 @@ final class ShowDetailsView: UIView {
         if let url = URL(string: show.originalPosterImage) {
             coverImageView.sd_setImage(
                 with: url,
-                placeholderImage: UIImage(icon: .photoBadgeExclamationmarkFill),
+                placeholderImage: UIImage(icon: .exclamationMarkIcloud),
                 options: [.continueInBackground, .scaleDownLargeImages]
             ) { [weak self] _, _, _, _ in
                 self?.activityIndicator.stopAnimating()
             }
         } else {
-            coverImageView.image = UIImage(icon: .photoBadgeExclamationmarkFill)
+            coverImageView.image = UIImage(icon: .exclamationMarkIcloud)
             activityIndicator.stopAnimating()
         }
     }
