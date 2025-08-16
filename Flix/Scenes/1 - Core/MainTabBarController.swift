@@ -12,7 +12,6 @@ final class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabs()
-        setupTabBarAppearance()
     }
     
     private func setupTabs() {
@@ -34,19 +33,8 @@ final class MainTabBarController: UITabBarController {
 
         viewControllers = [showsNavigationController, favoritesNavigationController]
         selectedIndex = 0
-    }
-    
-    private func setupTabBarAppearance() {
-        tabBar.tintColor = .systemBlue
-        tabBar.backgroundColor = .systemBackground
         
-        if #available(iOS 15.0, *) {
-            let appearance = UITabBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .systemBackground
-            
-            tabBar.standardAppearance = appearance
-            tabBar.scrollEdgeAppearance = appearance
-        }
+        tabBar.tintColor = .label
+        overrideUserInterfaceStyle = .dark
     }
 } 

@@ -12,12 +12,14 @@ import RxRelay
 import RxCocoa
 
 protocol ShowViewModelProtocol {
-    func fetchTVShows() -> Single<[TVShow]>
+    func fetchTVShows()
     func resetData()
-    func refreshData() -> Single<[TVShow]>
+    func refreshData()
     func cellForItem(at indexPath: IndexPath) -> TVShow
     func searchBar(textDidChange searchText: String)
     func shouldRefetchData() -> Bool
+    var showSubject: PublishSubject<[TVShow]> { get }
+    var shows: Driver<[TVShow]> { get }
     var isLoading: Driver<Bool> { get }
     var numberOfItemsInSection: Int { get }
 }
@@ -26,14 +28,16 @@ final class ShowViewModel: ShowViewModelProtocol {
     // MARK: - Private Properties
     private let service: ServiceProtocol
     private let networkMonitor: NetworkMonitor
-    private var showsFiltered: [TVShow] = []
     private var originalShows: [TVShow] = []
     private var hasOriginalData: Bool = false
     private var currentPage: Int = 0
     private let isLoadingRelay = BehaviorRelay<Bool>(value: false)
     private let showsRelay = BehaviorRelay<[TVShow]>(value: [])
+    private let disposeBag = DisposeBag()
     
     // MARK: - Properties
+    
+    var showSubject = PublishSubject<[TVShow]>()
     var shows: Driver<[TVShow]> {
         showsRelay.asDriver()
     }
@@ -51,37 +55,37 @@ final class ShowViewModel: ShowViewModelProtocol {
     init(service: ServiceProtocol = Service(), networkMonitor: NetworkMonitor = NetworkMonitor.shared) {
         self.service = service
         self.networkMonitor = networkMonitor
+        fetchTVShows()
     }
     
     // MARK: - Methods
     
-    func fetchTVShows() -> Single<[TVShow]> {
+    func fetchTVShows() {
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão com a internet")
-            let error = NetworkError.noConnection
-            return Single.error(error)
+            isLoadingRelay.accept(false)
+            return
         }
-        
         print("🌐 Conectividade verificada: \(networkMonitor.getConnectionType())")
         
         return service.getShows(page: currentPage)
-            .do(onSuccess: { [weak self] shows in
-                if self?.currentPage == 1 {
-                    self?.originalShows = shows
-                    self?.showsRelay.accept(shows)
+            .subscribe(onSuccess: { [weak self] shows in
+                guard let self = self else { return }
+                print("📺 Shows recebidos: \(shows.count)")
+                if self.currentPage == 0 {
+                    showSubject.onNext(shows)
+                    self.originalShows = shows
+                    self.showsRelay.accept(shows)
                 } else {
-                    self?.originalShows.append(contentsOf: shows)
-                    self?.showsRelay.accept(self?.originalShows ?? [])
+                    self.originalShows.append(contentsOf: shows)
+                    self.showsRelay.accept(self.originalShows)
                 }
-                
-                self?.hasOriginalData = true
+            }, onFailure: { [weak self] error in
+                print("❌ Erro ao buscar shows: \(error)")
                 self?.isLoadingRelay.accept(false)
-            }, onError: { [weak self] error in
-                print("❌ Fetch Error: \(error)")
-                self?.isLoadingRelay.accept(false)
-            }, onSubscribe: { [weak self] in
-                self?.isLoadingRelay.accept(true)
             })
+            .disposed(by: disposeBag)
+
     }
     
     func cellForItem(at indexPath: IndexPath) -> TVShow {
@@ -106,9 +110,9 @@ final class ShowViewModel: ShowViewModelProtocol {
         print("🔄 Dados resetados")
     }
     
-    func refreshData() -> Single<[TVShow]> {
+    func refreshData()  {
         resetData()
-        return fetchTVShows()
+        fetchTVShows()
     }
     
     func shouldRefetchData() -> Bool {

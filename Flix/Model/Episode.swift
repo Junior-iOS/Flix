@@ -14,7 +14,6 @@ struct Episode: Codable, Hashable {
     let number: Int?
     let airdate: String?
     let airtime: String?
-    let airstamp: String?
     let runtime: Int?
     let rating: Rating
     let image: PosterImage?

@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 
 final class ShowViewController: UIViewController {
-    private let viewModel: ShowViewModel
+    private let viewModel: ShowViewModelProtocol
     private let showView = ShowView()
     private let disposeBag = DisposeBag()
     private let searchController = UISearchController(searchResultsController: nil)
@@ -17,7 +17,7 @@ final class ShowViewController: UIViewController {
     private let networkMonitor = NetworkMonitor.shared
 
     // MARK: - Init
-    init(viewModel: ShowViewModel = ShowViewModel()) {
+    init(viewModel: ShowViewModelProtocol = ShowViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -34,15 +34,9 @@ final class ShowViewController: UIViewController {
         super.viewDidLoad()
         configNavBarAndDelegatesAndDataSources()
         setupBindings()
-        fetchShows()
     }
-    
-    private func fetchShows() {
-        viewModel.fetchTVShows()
-            .subscribe()
-            .disposed(by: disposeBag)
-    }
-    
+
+    // MARK: - Private Methods
     private func configNavBarAndDelegatesAndDataSources() {
         configureNavigationBar()
         configureRefreshControl()
@@ -104,14 +98,8 @@ final class ShowViewController: UIViewController {
             return
         }
         
-        viewModel.refreshData()
-            .subscribe(onSuccess: { [weak self] _ in
-                print("✅ Pull-to-refresh concluído com sucesso")
-                DispatchQueue.main.async {
-                    self?.refreshControl.endRefreshing()
-                }
-            }, onFailure: { [weak self] error in
-                print("❌ Pull-to-refresh falhou: \(error)")
+        viewModel.showSubject
+            .subscribe(onNext: { [weak self] _ in
                 DispatchQueue.main.async {
                     self?.refreshControl.endRefreshing()
                 }
@@ -176,14 +164,9 @@ extension ShowViewController: UISearchResultsUpdating {
 
 // MARK: - UISearchBarDelegate
 extension ShowViewController: UISearchBarDelegate {
-
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         viewModel.searchBar(textDidChange: "")
-        
-        if viewModel.shouldRefetchData() {
-            fetchShows()
-        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

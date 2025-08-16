@@ -39,10 +39,10 @@ final class ShowSeasonsViewModel: ShowSeasonsViewModelProtocol {
     func fetchSeasons() {
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão com a internet")
-            return 
+            return
         }
         
-        return service.getSeasons(showID: show.id)
+        service.getSeasons(showID: show.id)
             .subscribe(onSuccess: { [weak self] seasons in
                 self?.seasonsSubject.onNext(seasons)
             }, onFailure: { [weak self] _ in

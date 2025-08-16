@@ -197,7 +197,6 @@ final class ShowDetailsView: UIView {
     private func setupHierarchy() {
         addSubviews(scrollView, buttonsStack, activityIndicator)
         scrollView.addSubview(contentView)
-//        coverImageView.addSubview(activityIndicator)
         
         contentView.addSubviews(
             coverImageView,

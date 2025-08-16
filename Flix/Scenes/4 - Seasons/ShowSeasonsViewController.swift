@@ -10,12 +10,13 @@ import UIKit
 import RxSwift
 
 final class ShowSeasonsViewController: UIViewController {
-
-    // MARK: - UI
-    private let seasonsView = ShowSeasonsView()
+    
+    // MARK: - Properties
+    typealias SeasonItem = ShowSeasonsView.SeasonItem
 
     // MARK: - Properties
     private let viewModel: ShowSeasonsViewModelProtocol
+    private let seasonsView = ShowSeasonsView()
     private let disposeBag = DisposeBag()
 
     // MARK: - Init
@@ -45,35 +46,27 @@ final class ShowSeasonsViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] seasons in
                 guard let self = self else { return }
-                // Atualize a UI com as temporadas recebidas
-                let items = seasons.map { self.mapToViewSeason($0) }
-                self.seasonsView.apply(seasons: items)
+                let items: [SeasonItem] = seasons.map { self.mapToViewSeason($0) }
+                self.seasonsView.apply(items: items)
             })
             .disposed(by: disposeBag)
     }
     
-    private func mapToViewSeason(_ season: Season) -> ShowSeasonsView.Season {
-            // Exemplos de nomes comuns. Troque para os seus:
-            // season.id               -> Int
-            // season.posterURLString  -> String?
-            // season.seasonNumber     -> Int
-            // season.firstAirDate     -> "yyyy-MM-dd" ou String?
-            return ShowSeasonsView.Season(
-                id: season.id,
-                imageURLString: season.image?.original,
-                seasonNumber: season.number,
-                year: ""
-            )
-        }
+    private func mapToViewSeason(_ season: Season) -> SeasonItem {
+        return SeasonItem(
+            id: season.id,
+            imageURL: season.image?.original,
+            seasonNumber: season.number,
+            year: season.premiereDate
+        )
+    }
 }
 
 // MARK: - ShowSeasonsViewDelegate
 extension ShowSeasonsViewController: ShowSeasonsViewDelegate {
-    func didPullToRefresh() {
-        viewModel.fetchSeasons()
-    }
-
-    func didSelectSeason(_ seasonID: Int) {
-        // Navegar para detalhes/episódios da temporada
+    func didSelectSeason(_ season: SeasonItem) {
+        let viewModel = EpisodesViewModel(show: viewModel.show, season: season)
+        let controller = EpisodesViewController(viewModel: viewModel)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
