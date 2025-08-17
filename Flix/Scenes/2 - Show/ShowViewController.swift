@@ -5,8 +5,8 @@
 //  Created by NJ Development on 23/05/25.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 final class ShowViewController: UIViewController {
     private let viewModel: ShowViewModelProtocol
@@ -21,10 +21,10 @@ final class ShowViewController: UIViewController {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
-    
+    required init?(coder _: NSCoder) { nil }
+
     override func loadView() {
         super.loadView()
         self.view = showView
@@ -43,11 +43,11 @@ final class ShowViewController: UIViewController {
         configureDelegates()
         configureDataSource()
     }
-    
+
     private func setupBindings() {
         disposeBag.insert([
             viewModel.shows
-                .drive(onNext: { [weak self] shows in
+                .drive { [weak self] shows in
                     var snapshot = NSDiffableDataSourceSnapshot<Section, TVShow>()
                     snapshot.appendSections([.main])
                     snapshot.appendItems(shows)
@@ -55,10 +55,10 @@ final class ShowViewController: UIViewController {
                         self?.showView.dataSource.apply(snapshot, animatingDifferences: true)
                     }
                     self?.setNeedsUpdateContentUnavailableConfiguration()
-                }),
-            
+                },
+
             viewModel.isLoading
-                .drive(onNext: { [weak self] isLoading in
+                .drive { [weak self] isLoading in
                     DispatchQueue.main.async {
                         if isLoading {
                             self?.showView.activityIndicator.startAnimating()
@@ -66,10 +66,10 @@ final class ShowViewController: UIViewController {
                             self?.showView.activityIndicator.stopAnimating()
                         }
                     }
-                })
+                }
         ])
     }
-    
+
     private func configureNavigationBar() {
         title = "TV Shows"
         searchController.searchResultsUpdater = self
@@ -80,25 +80,25 @@ final class ShowViewController: UIViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
-        
+
         // Estilo da barra de busca para branco
         searchController.searchBar.barStyle = .black
         searchController.searchBar.tintColor = .label
         searchController.searchBar.searchTextField.textColor = .label
         searchController.searchBar.searchTextField.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
-        
+
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
     }
-    
+
     private func configureRefreshControl() {
         refreshControl.attributedTitle = NSAttributedString(string: "Atualizando shows...")
         refreshControl.tintColor = .systemOrange
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         showView.collectionView.refreshControl = refreshControl
     }
-    
+
     @objc private func refreshData() {
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão - cancelando refresh")
@@ -107,24 +107,23 @@ final class ShowViewController: UIViewController {
             }
             return
         }
-        
+
         viewModel.showSubject
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe { [weak self] _ in
                 DispatchQueue.main.async {
                     self?.refreshControl.endRefreshing()
                 }
-            })
+            }
             .disposed(by: disposeBag)
     }
-    
+
     private func configureDelegates() {
         showView.collectionView.delegate = self
     }
-    
+
     private func configureDataSource() {
         showView.dataSource = UICollectionViewDiffableDataSource<Section, TVShow>(
-            collectionView: showView.collectionView,
-            cellProvider: { (collectionView, indexPath, show) -> UICollectionViewCell in
+            collectionView: showView.collectionView) { collectionView, indexPath, show -> UICollectionViewCell in
                 guard let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: ShowCell.identifier,
                     for: indexPath
@@ -134,11 +133,11 @@ final class ShowViewController: UIViewController {
                 }
             cell.configure(show: show)
             return cell
-        })
+        }
     }
-    
-    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
-        if viewModel.numberOfItemsInSection == 0 /*&& !showView.spinner.isAnimating*/ {
+
+    override func updateContentUnavailableConfiguration(using _: UIContentUnavailableConfigurationState) {
+        if viewModel.numberOfItemsInSection == 0 { /*&& !showView.spinner.isAnimating*/
             var config = UIContentUnavailableConfiguration.empty()
             config.image = .init(systemName: "movieclapper")
             config.text = "Sem Séries"
@@ -149,9 +148,8 @@ final class ShowViewController: UIViewController {
     }
 }
 
-//MARK: COLLECTIONVIEW DELEGATE
+// MARK: COLLECTIONVIEW DELEGATE
 extension ShowViewController: UICollectionViewDelegate {
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let show = viewModel.cellForItem(at: indexPath)
@@ -178,12 +176,12 @@ extension ShowViewController: UISearchBarDelegate {
         searchBar.text = ""
         viewModel.searchBar(textDidChange: "")
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+    func searchBar(_: UISearchBar, textDidChange searchText: String) {
         viewModel.searchBar(textDidChange: searchText)
     }
 }

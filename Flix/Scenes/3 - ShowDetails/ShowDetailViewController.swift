@@ -8,33 +8,32 @@
 import UIKit
 
 final class ShowDetailViewController: UIViewController {
-    
     // MARK: - Private Properties
     private let detailView = ShowDetailsView()
     private let viewModel: ShowDetailsViewModelProtocol
-    
+
     // MARK: - Init
-    
+
     override func loadView() {
         view = detailView
     }
-    
+
     init(_ viewModel: ShowDetailsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureData()
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func configureData() {
         title = viewModel.title
         detailView.delegate = self
@@ -50,7 +49,7 @@ extension ShowDetailViewController: ShowDetailsViewDelegate {
         let controller = ShowSeasonsViewController(viewModel: showSeasonsViewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
-    
+
     func didTapCastButton() {
         print("Cast Tapped")
     }

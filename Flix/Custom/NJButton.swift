@@ -13,10 +13,10 @@ class NJButton: UIButton {
         super.init(frame: frame)
         configure()
     }
-    
+
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
-    
+    required init?(coder _: NSCoder) { nil }
+
     init(backgroundColor: UIColor, title: String, target: Any, action: Selector) {
         super.init(frame: .zero)
         self.backgroundColor = backgroundColor
@@ -24,7 +24,7 @@ class NJButton: UIButton {
         addTarget(target, action: action, for: .touchUpInside)
         configure()
     }
-    
+
     private func configure() {
         layer.cornerRadius = 10
         titleLabel?.textColor = .white

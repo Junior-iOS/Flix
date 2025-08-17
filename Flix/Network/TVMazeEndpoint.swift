@@ -36,12 +36,16 @@ enum TVMazeEndpoint: Endpoint {
         switch self {
         case .shows, .pagedShows:
             return "/shows"
+
         case .show(let id):
             return "/shows/\(id)"
+
         case .cast(let showID):
             return "/shows/\(showID)/cast"
+
         case .seasons(let showID):
             return "/shows/\(showID)/seasons"
+
         case .episodes(let showID):
             return "/shows/\(showID)/episodes"
         }
@@ -57,6 +61,7 @@ enum TVMazeEndpoint: Endpoint {
         switch self {
         case .pagedShows(let page):
             return [URLQueryItem(name: "page", value: "\(page)")]
+
         default:
             return nil
         }
@@ -81,4 +86,3 @@ enum TVMazeEndpoint: Endpoint {
         return request
     }
 }
-

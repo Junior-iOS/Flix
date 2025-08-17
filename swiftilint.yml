@@ -1,0 +1,124 @@
+# ===============================
+# SwiftLint Hardcore Configuration
+# ===============================
+
+# ===============================
+# Regras desativadas (apenas o essencial)
+# ===============================
+disabled_rules:
+  - identifier_name # permite variáveis temporárias pequenas, como i,j
+  - cyclomatic_complexity # se não quiser bloquear funções complexas
+  - line_length # controlaremos via warning e error customizado
+
+# ===============================
+# Regras opcionais aplicadas
+# ===============================
+opt_in_rules:
+  - empty_count
+  - vertical_whitespace
+  - redundant_void_return
+  - unused_import
+  - todo
+  - trailing_whitespace
+  - comment_spacing
+  - colon
+  - closure_end_indentation
+  - empty_enum_arguments
+  - explicit_init
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - missing_docs
+  - type_name
+  - file_length
+  - function_body_length
+  - operator_usage_whitespace
+  - opening_brace
+  - statement_position
+  - unused_closure_parameter
+  - vertical_parameter_alignment
+
+# ===============================
+# Limites de linha e arquivos
+# ===============================
+line_length:
+  warning: 100
+  error: 120
+
+file_length:
+  warning: 400
+  error: 600
+
+function_body_length:
+  warning: 40
+  error: 60
+
+# ===============================
+# Indentação e espaços
+# ===============================
+indentation:
+  severity: error
+  spaces: 4
+
+trailing_whitespace:
+  severity: error
+
+vertical_whitespace:
+  max_empty_lines: 1
+  severity: error
+
+operator_usage_whitespace:
+  severity: error
+
+# ===============================
+# Código comentado e TODOs
+# ===============================
+comment_spacing:
+  severity: error
+
+todo:
+  severity: error
+
+# ===============================
+# Código perigoso
+# ===============================
+force_cast:
+  severity: error
+force_try:
+  severity: error
+force_unwrapping:
+  severity: error
+
+# ===============================
+# Importações e variáveis
+# ===============================
+unused_import:
+  severity: error
+
+type_name:
+  min_length:
+    warning: 3
+    error: 1
+
+variable_name:
+  min_length:
+    warning: 2
+    error: 1
+
+unused_closure_parameter:
+  severity: error
+
+# ===============================
+# Formatação de closures, enums e statements
+# ===============================
+closure_end_indentation:
+  severity: error
+
+empty_enum_arguments:
+  severity: error
+
+opening_brace:
+  severity: error
+
+statement_position:
+  severity: error

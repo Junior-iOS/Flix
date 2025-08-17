@@ -6,27 +6,26 @@
 //
 
 import Foundation
-import UIKit
 import SDWebImage
+import UIKit
 
 protocol ShowSeasonsViewDelegate: AnyObject {
     func didSelectSeason(_ season: ShowSeasonsView.SeasonItem)
 }
 
 final class ShowSeasonsView: UIView {
-
     // MARK: - Types
     private enum Section: Hashable {
         case main
     }
-    
+
     private struct Constants {
         static let cellCornerRadius: CGFloat = 8
         static let cellSpacing: CGFloat = 10
         static let minimumLineSpacing: CGFloat = 15
         static let mediumPadding: CGFloat = 16
         static let largePadding: CGFloat = 24
-        static let cellSize: CGSize = CGSize(width: 150, height: 200)
+        static let cellSize = CGSize(width: 150, height: 200)
         static let emptyStateText = "Nenhuma temporada disponível."
     }
 
@@ -37,15 +36,8 @@ final class ShowSeasonsView: UIView {
         let seasonNumber: Int
         let year: String?
 
-        init(id: Int, imageURL: String?, seasonNumber: Int, year: String?) {
-            self.id = id
-            self.imageURL = imageURL
-            self.seasonNumber = seasonNumber
-            self.year = year
-        }
-
         func hash(into hasher: inout Hasher) { hasher.combine(id) }
-        static func == (lhs: SeasonItem, rhs: SeasonItem) -> Bool { lhs.id == rhs.id }
+        static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
     }
 
     // MARK: - Public Properties
@@ -55,12 +47,12 @@ final class ShowSeasonsView: UIView {
     private lazy var collectionView: UICollectionView = {
         let padding: CGFloat = Constants.cellSpacing
         let widthScreen = (UIScreen.main.bounds.width) / 3.5
-        
+
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: padding, left: padding, bottom: padding + 20, right: padding)
         layout.itemSize = Constants.cellSize
         layout.minimumLineSpacing = Constants.minimumLineSpacing
-        
+
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
@@ -96,7 +88,7 @@ final class ShowSeasonsView: UIView {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
+    required init?(coder _: NSCoder) { nil }
 
     // MARK: - Private Methods
     private func setupHierarchy() {
@@ -127,7 +119,7 @@ final class ShowSeasonsView: UIView {
             cell.configure(with: item)
             return cell
         }
-        
+
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
         dataSource.apply(snapshot, animatingDifferences: false)

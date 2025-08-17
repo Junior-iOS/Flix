@@ -11,6 +11,8 @@
 		14224BCD2E3D17CB002194B8 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 14224BCC2E3D17CB002194B8 /* RxRelay */; };
 		14224BCF2E3D17CB002194B8 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 14224BCE2E3D17CB002194B8 /* RxSwift */; };
 		14A1CA262DF27F14007E4FCE /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 14A1CA252DF27F14007E4FCE /* SDWebImage */; };
+		14F182D32E51990500EBB79D /* NJKit in Frameworks */ = {isa = PBXBuildFile; productRef = 14F182D22E51990500EBB79D /* NJKit */; };
+		14F182D62E519E0600EBB79D /* swiftilint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 14F182D52E519E0600EBB79D /* swiftilint.yml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,8 @@
 		146CBD2A2DE0226E00E6D9FD /* Flix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		146CBD402DE0226F00E6D9FD /* FlixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		146CBD4A2DE0226F00E6D9FD /* FlixUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlixUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		14F182D02E5195CC00EBB79D /* NJKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = NJKit; path = ../NJKit; sourceTree = SOURCE_ROOT; };
+		14F182D52E519E0600EBB79D /* swiftilint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftilint.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -75,6 +79,7 @@
 				14224BCD2E3D17CB002194B8 /* RxRelay in Frameworks */,
 				14224BCB2E3D17CB002194B8 /* RxCocoa in Frameworks */,
 				14224BCF2E3D17CB002194B8 /* RxSwift in Frameworks */,
+				14F182D32E51990500EBB79D /* NJKit in Frameworks */,
 				14A1CA262DF27F14007E4FCE /* SDWebImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +104,8 @@
 		146CBD212DE0226E00E6D9FD = {
 			isa = PBXGroup;
 			children = (
+				14F182D52E519E0600EBB79D /* swiftilint.yml */,
+				14F182D02E5195CC00EBB79D /* NJKit */,
 				146CBD2C2DE0226E00E6D9FD /* Flix */,
 				146CBD432DE0226F00E6D9FD /* FlixTests */,
 				146CBD4D2DE0226F00E6D9FD /* FlixUITests */,
@@ -124,6 +131,7 @@
 			buildConfigurationList = 146CBD532DE0226F00E6D9FD /* Build configuration list for PBXNativeTarget "Flix" */;
 			buildPhases = (
 				146CBD262DE0226E00E6D9FD /* Sources */,
+				14F182D42E519D5300EBB79D /* ShellScript */,
 				146CBD272DE0226E00E6D9FD /* Frameworks */,
 				146CBD282DE0226E00E6D9FD /* Resources */,
 			);
@@ -140,6 +148,7 @@
 				14224BCA2E3D17CB002194B8 /* RxCocoa */,
 				14224BCC2E3D17CB002194B8 /* RxRelay */,
 				14224BCE2E3D17CB002194B8 /* RxSwift */,
+				14F182D22E51990500EBB79D /* NJKit */,
 			);
 			productName = Flix;
 			productReference = 146CBD2A2DE0226E00E6D9FD /* Flix.app */;
@@ -226,6 +235,7 @@
 			packageReferences = (
 				14A1CA242DF27F14007E4FCE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				14224BC92E3D17CB002194B8 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				14F182D12E51990500EBB79D /* XCLocalSwiftPackageReference "../NJKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 146CBD2B2DE0226E00E6D9FD /* Products */;
@@ -244,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14F182D62E519E0600EBB79D /* swiftilint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +273,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		14F182D42E519D5300EBB79D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  echo \"Running SwiftLint...\"\n  cd \"${SRCROOT}\"\n  swiftlint || echo \"⚠️ SwiftLint não pôde acessar alguns arquivos, verifique permissões\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		146CBD262DE0226E00E6D9FD /* Sources */ = {
@@ -589,6 +620,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		14F182D12E51990500EBB79D /* XCLocalSwiftPackageReference "../NJKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../NJKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		14224BC92E3D17CB002194B8 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -628,6 +666,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 14A1CA242DF27F14007E4FCE /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImage;
+		};
+		14F182D22E51990500EBB79D /* NJKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NJKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

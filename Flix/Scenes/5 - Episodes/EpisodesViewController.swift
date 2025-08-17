@@ -5,42 +5,41 @@
 //  Created by NJ Development on 15/08/25.
 //
 
-import UIKit
 import RxSwift
 import SDWebImage
+import UIKit
 
 final class EpisodesViewController: UIViewController {
-    
     // MARK: - Private Properties
     private let episodesView = EpisodesView()
     private let viewModel: EpisodesViewModelProtocol
     private let disposeBag = DisposeBag()
-    
+
     private lazy var header: EpisodesHeaderView = {
         let header = EpisodesHeaderView()
         header.translatesAutoresizingMaskIntoConstraints = false
         return header
     }()
-    
+
     override func loadView() {
         view = episodesView
     }
-    
+
     // MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Episodes"
         setupTable()
     }
-    
+
     init(viewModel: EpisodesViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
-    
+    required init?(coder _: NSCoder) { nil }
+
     private func setupTable() {
         episodesView.tableView.showsVerticalScrollIndicator = false
 
@@ -56,10 +55,10 @@ final class EpisodesViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 extension EpisodesViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        1
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: EpisodeRowCell.identifier, for: indexPath) as? EpisodeRowCell else {
             return UITableViewCell()
@@ -72,19 +71,19 @@ extension EpisodesViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension EpisodesViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+        200
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
+        40
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.title
+    func tableView(_: UITableView, titleForHeaderInSection _: Int) -> String? {
+        viewModel.title
     }
 
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection _: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         header.textLabel?.textColor = .white

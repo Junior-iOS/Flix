@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 final class ShowSeasonsViewController: UIViewController {
-    
     // MARK: - Properties
     typealias SeasonItem = ShowSeasonsView.SeasonItem
 
@@ -26,7 +25,7 @@ final class ShowSeasonsViewController: UIViewController {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
+    required init?(coder _: NSCoder) { nil }
 
     override func loadView() {
         view = seasonsView
@@ -44,16 +43,16 @@ final class ShowSeasonsViewController: UIViewController {
     private func bindViewModel() {
         viewModel.seasonsSubject
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] seasons in
-                guard let self = self else { return }
+            .subscribe { [weak self] seasons in
+                guard let self else { return }
                 let items: [SeasonItem] = seasons.map { self.mapToViewSeason($0) }
-                self.seasonsView.apply(items: items)
-            })
+                seasonsView.apply(items: items)
+            }
             .disposed(by: disposeBag)
     }
-    
+
     private func mapToViewSeason(_ season: Season) -> SeasonItem {
-        return SeasonItem(
+        SeasonItem(
             id: season.id,
             imageURL: season.image?.original,
             seasonNumber: season.number,

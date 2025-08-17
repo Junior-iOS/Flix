@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 final class EpisodesView: UIView {
-    
     // MARK: - Properties
     private(set) lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -17,21 +16,21 @@ final class EpisodesView: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-    
+
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
-    
+    required init?(coder _: NSCoder) { nil }
+
     private func setupView() {
         backgroundColor = .systemBackground
         addSubviews(tableView)
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import UIKit
-import RxSwift
-import RxRelay
 import RxCocoa
+import RxRelay
+import RxSwift
+import UIKit
 
 protocol ShowDetailsViewModelProtocol {
     func toggleFavorite()
@@ -18,17 +18,16 @@ protocol ShowDetailsViewModelProtocol {
 }
 
 final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
-    
     // MARK: - Private Properties
     private let service: ServiceProtocol
     private let networkMonitor: NetworkMonitor
     var show: TVShow
 
     // MARK: - Properties
-    public var title: String {
+    var title: String {
         show.name
     }
-    
+
     // MARK: - Init
     init(
         show: TVShow,
@@ -40,7 +39,7 @@ final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
         self.networkMonitor = networkMonitor
         checkFavoriteStatus()
     }
-    
+
 //    // MARK: - Methods
     func toggleFavorite() {
 //        let currentStatus = isFavoriteRelay.value
@@ -54,14 +53,13 @@ final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
 //            removeFromFavorites()
 //        }
     }
-    
+
 //    // MARK: - Private Methods
-    
+
     private func checkFavoriteStatus() {
-        let favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
-        let isFavorite = favorites.contains(show.id)
+//        let favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
     }
-    
+
     private func saveToFavorites() {
         var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
         if !favorites.contains(show.id) {
@@ -70,7 +68,7 @@ final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
             print("✅ Show adicionado aos favoritos")
         }
     }
-    
+
     private func removeFromFavorites() {
         var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
         favorites.removeAll { $0 == show.id }

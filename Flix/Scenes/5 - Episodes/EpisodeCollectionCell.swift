@@ -5,13 +5,12 @@
 //  Created by NJ Development on 16/08/25.
 //
 
-import UIKit
 import SDWebImage
+import UIKit
 
 final class EpisodeCollectionCell: UICollectionViewCell {
-    
     private let badgeLabel = NJBadgeLabel(textColor: .black, backgroundColor: .systemGray)
-    
+
     private lazy var  imageView: UIImageView = {
         let imageView = UIImageView(icon: .exclamationMarkIcloud)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,7 +18,7 @@ final class EpisodeCollectionCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         return imageView
     }()
-    
+
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -28,7 +27,7 @@ final class EpisodeCollectionCell: UICollectionViewCell {
         indicator.hidesWhenStopped = true
         return indicator
     }()
-    
+
     private lazy var nameLabel = NJLabel(
         textColor: .white,
         fontSize: 16,
@@ -43,33 +42,31 @@ final class EpisodeCollectionCell: UICollectionViewCell {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
+    required init?(coder _: NSCoder) { nil }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
-        activityIndicator.stopAnimating()
+            activityIndicator.stopAnimating()
     }
-    
+
     private func setup() {
-//        imageView.roundCorners([.topLeft, .topRight], radius: 8)
-//        nameLabel.roundCorners([.bottomLeft, .bottomRight], radius: 8)
         roundCorners([.allCorners], radius: 8)
-        
+
         contentView.addSubviews(
             imageView,
             badgeLabel,
             nameLabel,
             activityIndicator
         )
-       
+
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 140),
-            
+
             badgeLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 8),
             badgeLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -8),
             badgeLabel.heightAnchor.constraint(equalToConstant: 24),
@@ -84,17 +81,17 @@ final class EpisodeCollectionCell: UICollectionViewCell {
             activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
     }
-    
+
     func configure(with episode: Episode) {
         badgeLabel.text = "\(episode.number)"
         nameLabel.text = episode.name
-        
+
         guard let image = episode.image?.original else {
             imageView.image = UIImage(icon: .exclamationMarkIcloud)
             activityIndicator.stopAnimating()
             return
         }
-        
+
         imageView.sd_setImage(with: URL(string: image)) { [weak self] _, _, _, _ in
             self?.activityIndicator.stopAnimating()
         }

@@ -5,9 +5,9 @@
 //  Created by NJ Development on 16/08/25.
 //
 
-import UIKit
 import RxSwift
 import SDWebImage
+import UIKit
 
 final class EpisodeRowCell: UITableViewCell {
     private lazy var collectionView: UICollectionView = {
@@ -25,7 +25,7 @@ final class EpisodeRowCell: UITableViewCell {
         collectionView.register(EpisodeCollectionCell.self, forCellWithReuseIdentifier: EpisodeCollectionCell.identifier)
         return collectionView
     }()
-    
+
     private var dataSource: UICollectionViewDiffableDataSource<Int, Episode>!
     private var disposeBag = DisposeBag()
     private var episodes: [Episode] = []
@@ -35,13 +35,13 @@ final class EpisodeRowCell: UITableViewCell {
         setup()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private func setup() {
         contentView.addSubview(collectionView)
-        
+
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -53,29 +53,25 @@ final class EpisodeRowCell: UITableViewCell {
     }
 
     private func setupDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Int, Episode>(collectionView: collectionView) { (collectionView, indexPath, episode) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Int, Episode>(collectionView: collectionView) { collectionView, indexPath, episode -> UICollectionViewCell? in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EpisodeCollectionCell.identifier, for: indexPath) as? EpisodeCollectionCell else {
                 print("Failed to dequeue EpisodeCollectionCell")
                 return UICollectionViewCell()
             }
-            
+
             cell.configure(with: episode)
             return cell
         }
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
 
     func bind(to episodesObservable: Observable<[Episode]>) {
         disposeBag = DisposeBag() // reinicia sempre que a célula for reutilizada
         episodesObservable
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] episodes in
+            .subscribe { [weak self] episodes in
                 self?.episodes = episodes
                 self?.applyEpisodes(episodes)
-            })
+            }
             .disposed(by: disposeBag)
     }
 

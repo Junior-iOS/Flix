@@ -17,7 +17,7 @@ final class SeasonCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         return imageView
     }()
-    
+
     private let badgeLabel = NJBadgeLabel()
 
     private let yearLabel: UILabel = {
@@ -28,7 +28,7 @@ final class SeasonCell: UICollectionViewCell {
         label.textAlignment = .center
         return label
     }()
-    
+
     lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .systemOrange
@@ -44,7 +44,7 @@ final class SeasonCell: UICollectionViewCell {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
+    required init?(coder _: NSCoder) { nil }
 
     private func setup() {
         contentView.addSubviews(
@@ -53,21 +53,21 @@ final class SeasonCell: UICollectionViewCell {
             badgeLabel,
             activityIndicator
         )
-        
+
         NSLayoutConstraint.activate([
             seasonImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             seasonImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             seasonImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             seasonImageView.heightAnchor.constraint(equalToConstant: 200),
-            
+
             activityIndicator.centerXAnchor.constraint(equalTo: seasonImageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: seasonImageView.centerYAnchor),
-            
+
             badgeLabel.topAnchor.constraint(equalTo: seasonImageView.topAnchor, constant: -8),
             badgeLabel.trailingAnchor.constraint(equalTo: seasonImageView.trailingAnchor, constant: 8),
             badgeLabel.heightAnchor.constraint(equalToConstant: 24),
             badgeLabel.widthAnchor.constraint(equalToConstant: 24),
-            
+
             yearLabel.topAnchor.constraint(equalTo: seasonImageView.bottomAnchor, constant: 4),
             yearLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -75,12 +75,12 @@ final class SeasonCell: UICollectionViewCell {
             yearLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
-    
+
     func configure(with item: ShowSeasonsView.SeasonItem) {
         seasonImageView.sd_setImage(with: URL(string: item.imageURL ?? "")) { [weak self] image, _, _, _ in
-            guard let self = self else { return }
-            if image == nil { self.seasonImageView.image = UIImage(icon: .exclamationMarkIcloud) }
-            self.activityIndicator.stopAnimating()
+            guard let self else { return }
+            if image == nil { seasonImageView.image = UIImage(icon: .exclamationMarkIcloud) }
+            activityIndicator.stopAnimating()
         }
         badgeLabel.text = "T\(item.seasonNumber)"
         yearLabel.text = dateFormat(text: "Aired", item.year ?? "N/A")

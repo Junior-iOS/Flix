@@ -22,17 +22,21 @@ enum ServiceError: Error, LocalizedError {
     case invalidURL
     case httpError(Int)
     case decodingError(DecodingError)
-    
+
     var errorDescription: String? {
         switch self {
         case .invalidData:
             return "Dados inválidos"
+
         case .networkError(let error):
             return "Erro de rede: \(error.localizedDescription)"
+
         case .invalidURL:
             return "URL inválida"
+
         case .httpError(let code):
             return "Erro HTTP: \(code)"
+
         case .decodingError(let error):
             return "Erro de decodificação: \(error.localizedDescription)"
         }
@@ -40,40 +44,39 @@ enum ServiceError: Error, LocalizedError {
 }
 
 final class Service: ServiceProtocol {
-    
     // MARK: - Properties
     private let session: URLSession
     private let cache = NSCache<NSString, NSData>()
-    
+
     // MARK: - Initialization
     init(session: URLSession = .shared) {
         self.session = session
     }
-    
+
     // MARK: - Methods
-    
+
     func getShows(page: Int) -> Single<[TVShow]> {
         request(.pagedShows(page: page))
     }
-    
+
     func getShow(id: Int) -> Single<TVShow> {
         request(.show(id: id))
     }
-    
+
     func getCast(showID: Int) -> Single<[Cast]> {
         request(.cast(showID: showID))
     }
-    
+
     func getSeasons(showID: Int) -> Single<[Season]> {
         request(.seasons(showID: showID))
     }
-    
+
     func getEpisodes(showID: Int) -> Single<[Episode]> {
         request(.episodes(showID: showID))
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func request<T: Decodable>(_ endpoint: TVMazeEndpoint) -> Single<T> {
         Single.create { single in
             Task {
@@ -87,12 +90,12 @@ final class Service: ServiceProtocol {
             return Disposables.create()
         }
     }
-    
+
     private func fetch<T: Decodable>(endpoint: TVMazeEndpoint) async throws -> T {
         guard let request = endpoint.asURLRequest() else {
             throw ServiceError.invalidURL
         }
-        
+
         // Verifica cache primeiro
         let cacheKey = NSString(string: request.url?.absoluteString ?? "")
         if let cachedData = cache.object(forKey: cacheKey) {
@@ -106,23 +109,23 @@ final class Service: ServiceProtocol {
                 print("⚠️ Cache decode failed, proceeding with network request")
             }
         }
-        
+
         do {
             let (data, response) = try await session.data(for: request)
-            
+
             if let httpResponse = response as? HTTPURLResponse {
                 guard (200...299).contains(httpResponse.statusCode) else {
                     throw ServiceError.httpError(httpResponse.statusCode)
                 }
             }
-            
+
             // Salva no cache
             cache.setObject(data as NSData, forKey: cacheKey)
-            
+
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             decoder.dateDecodingStrategy = .iso8601
-            
+
             return try decoder.decode(T.self, from: data)
         } catch let error as DecodingError {
             print("❌ Decoding Error: \(error)")
@@ -132,13 +135,13 @@ final class Service: ServiceProtocol {
             throw ServiceError.networkError(error)
         }
     }
-    
+
     // MARK: - Cache Management
-    
+
     func clearCache() {
         cache.removeAllObjects()
     }
-    
+
     func removeCache(for endpoint: TVMazeEndpoint) {
         guard let request = endpoint.asURLRequest(),
               let urlString = request.url?.absoluteString else { return }

@@ -9,7 +9,7 @@ import UIKit
 
 final class EpisodesHeaderView: UIView {
     typealias SeasonItem = ShowSeasonsView.SeasonItem
-    
+
     private let episodeImage: UIImageView = {
         let imageView = UIImageView(icon: .exclamationMarkIcloud)
         imageView.contentMode = .scaleAspectFill
@@ -25,7 +25,7 @@ final class EpisodesHeaderView: UIView {
             UIColor.systemBackground.cgColor
         ]
         layer.locations = [0.0, 1.0]
-        
+
         return layer
     }()
 
@@ -34,18 +34,18 @@ final class EpisodesHeaderView: UIView {
         addSubview(episodeImage)
         episodeImage.layer.addSublayer(gradientLayer)
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         episodeImage.frame = bounds
         gradientLayer.frame = episodeImage.bounds
     }
-    
-    public func configure(with season: SeasonItem) {
+
+    func configure(with season: SeasonItem) {
         guard let image = season.imageURL, let url = URL(string: image) else { return }
         DispatchQueue.main.async {
             self.episodeImage.sd_setImage(with: url)

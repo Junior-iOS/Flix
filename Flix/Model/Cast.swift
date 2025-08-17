@@ -10,12 +10,12 @@ import Foundation
 struct Cast: Codable, Hashable {
     let person: Person
     let character: Character?
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(person.id)
     }
-    
-    static func == (lhs: Cast, rhs: Cast) -> Bool {
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.person.id == rhs.person.id
     }
 }

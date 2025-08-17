@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import UIKit
-import RxSwift
-import RxRelay
 import RxCocoa
+import RxRelay
+import RxSwift
+import UIKit
 
 protocol ShowViewModelProtocol {
     func fetchTVShows()
@@ -34,9 +34,9 @@ final class ShowViewModel: ShowViewModelProtocol {
     private let isLoadingRelay = BehaviorRelay<Bool>(value: false)
     private let showsRelay = BehaviorRelay<[TVShow]>(value: [])
     private let disposeBag = DisposeBag()
-    
+
     // MARK: - Properties
-    
+
     var showSubject = PublishSubject<[TVShow]>()
     var shows: Driver<[TVShow]> {
         showsRelay.asDriver()
@@ -45,21 +45,21 @@ final class ShowViewModel: ShowViewModelProtocol {
     var numberOfItemsInSection: Int {
         showsRelay.value.count
     }
-    
+
     var isLoading: Driver<Bool> {
         isLoadingRelay.asDriver()
     }
-    
+
     // MARK: - Init
-    
+
     init(service: ServiceProtocol = Service(), networkMonitor: NetworkMonitor = NetworkMonitor.shared) {
         self.service = service
         self.networkMonitor = networkMonitor
         fetchTVShows()
     }
-    
+
     // MARK: - Methods
-    
+
     func fetchTVShows() {
         guard networkMonitor.checkConnection() else {
             print("❌ Sem conexão com a internet")
@@ -67,31 +67,31 @@ final class ShowViewModel: ShowViewModelProtocol {
             return
         }
         print("🌐 Conectividade verificada: \(networkMonitor.getConnectionType())")
-        
-        return service.getShows(page: currentPage)
+
+        service.getShows(page: currentPage)
             .subscribe(onSuccess: { [weak self] shows in
-                guard let self = self else { return }
+                guard let self else { return }
                 print("📺 Shows recebidos: \(shows.count)")
-                if self.currentPage == 0 {
+                if currentPage == 0 {
                     showSubject.onNext(shows)
-                    self.originalShows = shows
-                    self.showsRelay.accept(shows)
+                    originalShows = shows
+                    showsRelay.accept(shows)
                 } else {
-                    self.originalShows.append(contentsOf: shows)
-                    self.showsRelay.accept(self.originalShows)
+                    originalShows.append(contentsOf: shows)
+                    showsRelay.accept(originalShows)
                 }
             }, onFailure: { [weak self] error in
                 print("❌ Erro ao buscar shows: \(error)")
                 self?.isLoadingRelay.accept(false)
             })
             .disposed(by: disposeBag)
+        return
+    }
 
-    }
-    
     func cellForItem(at indexPath: IndexPath) -> TVShow {
-        return showsRelay.value[indexPath.item]
+        showsRelay.value[indexPath.item]
     }
-    
+
     func searchBar(textDidChange searchText: String) {
         if searchText.isEmpty {
             print("📋 Showing all original shows")
@@ -101,7 +101,7 @@ final class ShowViewModel: ShowViewModelProtocol {
             showsRelay.accept(filteredShows)
         }
     }
-    
+
     func resetData() {
         originalShows = []
         showsRelay.accept([])
@@ -109,13 +109,13 @@ final class ShowViewModel: ShowViewModelProtocol {
         currentPage = 0
         print("🔄 Dados resetados")
     }
-    
-    func refreshData()  {
+
+    func refreshData() {
         resetData()
         fetchTVShows()
     }
-    
+
     func shouldRefetchData() -> Bool {
-        return !hasOriginalData
+        !hasOriginalData
     }
 }

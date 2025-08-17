@@ -5,8 +5,8 @@
 //  Created by NJ Development on 02/08/25.
 //
 
-import UIKit
 import SDWebImage
+import UIKit
 
 protocol ShowDetailsViewDelegate: AnyObject {
     func didTapSeasonsButton()
@@ -14,10 +14,9 @@ protocol ShowDetailsViewDelegate: AnyObject {
 }
 
 final class ShowDetailsView: UIView {
-    
     // MARK: - Properties
     weak var delegate: ShowDetailsViewDelegate?
-    
+
     // MARK: - Private Properties
     private struct Constants {
         static let small: CGFloat = 8
@@ -26,20 +25,20 @@ final class ShowDetailsView: UIView {
         static let coverHeight: CGFloat = 350
         static let ratingSize = CGSize(width: 10, height: 10)
     }
-    
+
     // MARK: - UI Components
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
-    
+
     lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .systemOrange
@@ -48,7 +47,7 @@ final class ShowDetailsView: UIView {
         indicator.startAnimating()
         return indicator
     }()
-    
+
     lazy var coverImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,42 +57,38 @@ final class ShowDetailsView: UIView {
         imageView.layer.cornerRadius = 12
         return imageView
     }()
-    
+
     lazy var titleLabel: NJLabel = {
-        let label = NJLabel(
+        NJLabel(
             textAlignment: .center,
             textColor: .label,
             fontSize: 24,
             fontWeight: .bold
         )
-        return label
     }()
-    
+
     lazy var genresLabel: NJLabel = {
-        let label = NJLabel(
+        NJLabel(
             textColor: .secondaryLabel,
             fontSize: 16
         )
-        return label
     }()
-    
+
     lazy var premieredLabel: NJLabel = {
-        let label = NJLabel(
+        NJLabel(
             textColor: .systemBlue,
             fontSize: 14
         )
-        return label
     }()
-    
+
     lazy var statusLabel: NJLabel = {
-        let label = NJLabel(
+        NJLabel(
             textAlignment: .left,
             textColor: .systemBlue,
             fontSize: 14
         )
-        return label
     }()
-    
+
     lazy var durationStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [premieredLabel, statusLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -102,7 +97,7 @@ final class ShowDetailsView: UIView {
         stack.axis = .vertical
         return stack
     }()
-    
+
     lazy var ratingImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,7 +108,7 @@ final class ShowDetailsView: UIView {
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         return imageView
     }()
-    
+
     lazy var ratingLabel: NJLabel = {
         let label = NJLabel(
             textAlignment: .right,
@@ -124,7 +119,7 @@ final class ShowDetailsView: UIView {
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }()
-    
+
     lazy var ratingStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [ratingImageView, ratingLabel])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +129,7 @@ final class ShowDetailsView: UIView {
         stack.axis = .horizontal
         return stack
     }()
-    
+
     lazy var showInfoStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [durationStack, ratingStack])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -142,36 +137,33 @@ final class ShowDetailsView: UIView {
         stack.axis = .horizontal
         return stack
     }()
-    
+
     lazy var summaryLabel: NJLabel = {
-        let label = NJLabel(
+        NJLabel(
             textAlignment: .justified,
             textColor: .label,
             fontSize: 16
         )
-        return label
     }()
 
     lazy var episodesButton: NJButton = {
-        let button = NJButton(
+        NJButton(
             backgroundColor: .systemBlue,
             title: "Ver Temporadas",
             target: self,
             action: #selector(episodesButtonTapped)
         )
-        return button
     }()
-    
+
     lazy var castButton: NJButton = {
-        let button = NJButton(
+        NJButton(
             backgroundColor: .systemGreen,
             title: "Ver Elenco",
             target: self,
             action: #selector(castButtonTapped)
         )
-        return button
     }()
-    
+
     lazy var buttonsStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [episodesButton, castButton])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -180,25 +172,25 @@ final class ShowDetailsView: UIView {
         stack.distribution = .fillEqually
         return stack
     }()
-    
+
     // MARK: - Initialization
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         setupHierarchy()
         setupConstraints()
     }
-    
+
     @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
-    
+    required init?(coder _: NSCoder) { nil }
+
     // MARK: - Private Methods
-    
+
     private func setupHierarchy() {
         addSubviews(scrollView, buttonsStack, activityIndicator)
         scrollView.addSubview(contentView)
-        
+
         contentView.addSubviews(
             coverImageView,
             titleLabel,
@@ -207,58 +199,58 @@ final class ShowDetailsView: UIView {
             summaryLabel
         )
     }
-    
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             // Buttons Stack (fixo no bottom)
             buttonsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.medium),
             buttonsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.medium),
             buttonsStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.medium),
-            
+
             // Episodes Button
             episodesButton.heightAnchor.constraint(equalToConstant: Constants.large),
-            
+
             // Cast Button
             castButton.heightAnchor.constraint(equalToConstant: Constants.large),
-            
+
             // ScrollView (não vai até o bottom, deixa espaço para os botões)
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonsStack.topAnchor, constant: -Constants.medium),
-            
+
             // ContentView
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
+
             // Cover Image
             coverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.medium),
             coverImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             coverImageView.widthAnchor.constraint(equalToConstant: 300),
             coverImageView.heightAnchor.constraint(equalToConstant: Constants.coverHeight),
-            
+
             // Activity Indicator
             activityIndicator.centerXAnchor.constraint(equalTo: coverImageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor),
-            
+
             // Title
             titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.medium),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
-            
+
             // Genres
             genresLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.small),
             genresLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             genresLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
-            
+
             // Status
             showInfoStack.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: Constants.small),
             showInfoStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             showInfoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
-            
+
             // Summary
             summaryLabel.topAnchor.constraint(equalTo: showInfoStack.bottomAnchor, constant: Constants.medium),
             summaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
@@ -266,9 +258,9 @@ final class ShowDetailsView: UIView {
             summaryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.medium)
         ])
     }
-    
+
     // MARK: - Public Methods
-    
+
     func configureData(with show: TVShow) {
         titleLabel.text = show.name
         genresLabel.text = show.genres.joined(separator: " • ")
@@ -292,13 +284,13 @@ final class ShowDetailsView: UIView {
             activityIndicator.stopAnimating()
         }
     }
-    
+
     // MARK: - Public Methods
-    
+
     @objc private func episodesButtonTapped() {
         delegate?.didTapSeasonsButton()
     }
-    
+
     @objc private func castButtonTapped() {
         delegate?.didTapCastButton()
     }

@@ -19,12 +19,12 @@ struct Season: Codable, Hashable {
     let webChannel: WebChannel?
     let image: PosterImage?
     let summary: String?
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-    static func == (lhs: Season, rhs: Season) -> Bool {
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
 }
@@ -37,4 +37,4 @@ struct Network: Codable {
 struct WebChannel: Codable {
     let id: Int
     let name: String
-} 
+}

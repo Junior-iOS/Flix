@@ -18,12 +18,12 @@ struct Episode: Codable, Hashable {
     let rating: Rating
     let image: PosterImage?
     let summary: String?
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-    static func == (lhs: Episode, rhs: Episode) -> Bool {
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
-} 
+}

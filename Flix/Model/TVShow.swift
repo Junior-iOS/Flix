@@ -18,7 +18,7 @@ final class TVShow: Codable, Hashable {
     let rating: Rating
     let image: PosterImage?
     let summary: String
-    
+
     init(
         id: Int,
         name: String,
@@ -42,23 +42,23 @@ final class TVShow: Codable, Hashable {
         self.image = image
         self.summary = summary
     }
-    
+
     var ratingValue: Double {
-        return rating.average ?? 0.0
+        rating.average ?? 0.0
     }
-    
+
     var mediumPosterImage: String {
-        return image?.medium ?? ""
+        image?.medium ?? ""
     }
-    
+
     var originalPosterImage: String {
-        return image?.original ?? ""
+        image?.original ?? ""
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     static func == (lhs: TVShow, rhs: TVShow) -> Bool {
         lhs.id == rhs.id
     }
