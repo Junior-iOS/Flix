@@ -10,13 +10,13 @@ import SDWebImage
 import UIKit
 
 final class EpisodeRowCell: UITableViewCell {
-    private lazy var collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 12
-        layout.minimumInteritemSpacing = 12
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        layout.itemSize = CGSize(width: 140, height: 180)
+        layout.minimumLineSpacing = Constants.small
+        layout.minimumInteritemSpacing = Constants.small
+        layout.sectionInset = UIEdgeInsets(top: 0, left: Constants.medium, bottom: 0, right: Constants.medium)
+        layout.itemSize = Constants.itemSize
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -26,9 +26,16 @@ final class EpisodeRowCell: UITableViewCell {
         return collectionView
     }()
 
+    private struct Constants {
+        static let small = CGFloat(12)
+        static let medium = CGFloat(16)
+        static let itemSize = CGSize(width: 140, height: 180)
+    }
+
     private var dataSource: UICollectionViewDiffableDataSource<Int, Episode>!
     private var disposeBag = DisposeBag()
     private var episodes: [Episode] = []
+    var didSelectEpisode: ((Episode) -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -40,6 +47,7 @@ final class EpisodeRowCell: UITableViewCell {
     }
 
     private func setup() {
+        collectionView.delegate = self
         contentView.addSubview(collectionView)
 
         NSLayoutConstraint.activate([
@@ -80,5 +88,17 @@ final class EpisodeRowCell: UITableViewCell {
         snapshot.appendSections([0])
         snapshot.appendItems(episodes)
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+extension EpisodeRowCell: UICollectionViewDelegate {
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // Pegando o episódio selecionado
+        guard indexPath.item < episodes.count else { return }
+        let episode = episodes[indexPath.item]
+
+        // Notificando via closure
+        didSelectEpisode?(episode)
     }
 }

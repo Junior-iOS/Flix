@@ -37,6 +37,12 @@ opt_in_rules:
   - statement_position
   - unused_closure_parameter
   - vertical_parameter_alignment
+  - unused_declaration
+  - unused_import
+
+# Ativar autocorrect para regras que suportam correção automática
+autocorrect:
+  enabled: true
 
 # ===============================
 # Limites de linha e arquivos
