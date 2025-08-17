@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import SDWebImage
 
 final class EpisodesViewController: UIViewController {
     
@@ -28,9 +29,7 @@ final class EpisodesViewController: UIViewController {
     // MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = viewModel.title
-        bindViewModel()
-//        setupHeader()
+        title = "Episodes"
         setupTable()
     }
     
@@ -42,57 +41,49 @@ final class EpisodesViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder: NSCoder) { nil }
     
-    private func bindViewModel() {
-        viewModel.episodesSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] episodes in
-                guard let self = self else { return }
-                // Atualize a UI com os episódios recebidos
-                print("Received episodes: \(episodes.count)")
-                print("Episodes: \(episodes.map { $0 })")
-            })
-            .disposed(by: disposeBag)
-    }
-    
     private func setupTable() {
-        episodesView.tableView.delegate = self
-        episodesView.tableView.dataSource = self
         episodesView.tableView.showsVerticalScrollIndicator = false
-        
+
         header = EpisodesHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
         header.configure(with: viewModel.season)
         episodesView.tableView.tableHeaderView = header
+
+        episodesView.tableView.register(EpisodeRowCell.self, forCellReuseIdentifier: EpisodeRowCell.identifier)
+        episodesView.tableView.dataSource = self
+        episodesView.tableView.delegate = self
     }
 }
 
-// MARK: - UITABLEVIEW DELEGATE AND DATASOURCE
-extension EpisodesViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
-    
+// MARK: - UITableViewDataSource
+extension EpisodesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-        cell.backgroundColor = .red
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EpisodeRowCell.identifier, for: indexPath) as? EpisodeRowCell else {
+            return UITableViewCell()
+        }
+
+        cell.bind(to: viewModel.episodesRelay.asObservable())
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-    }
-    
+}
+
+// MARK: - UITableViewDelegate
+extension EpisodesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 200
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Title For Header" // sectionTitles[section]
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
-    
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return viewModel.title
+    }
+
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -101,28 +92,3 @@ extension EpisodesViewController: UITableViewDelegate, UITableViewDataSource {
         header.textLabel?.text = header.textLabel?.text?.capitalized
     }
 }
-
-// MARK: - COLLECTIONVIEWTABLEVIEWCELL DELEGATE
-//extension HomeViewController: CollectionViewTableViewCellDelegate {
-//    func didTapCell(_ cell: CollectionViewTableViewCell, viewModel: PreviewViewModel) {
-//        DispatchQueue.main.async {
-//            cell.activityIndicator.stopAnimating()
-//            let controller = PreviewViewController()
-//            controller.configure(with: viewModel)
-//            self.present(controller, animated: true)
-//        }
-//    }
-//    
-//    func networkError(_ cell: CollectionViewTableViewCell) {
-//        DispatchQueue.main.async {
-//            cell.activityIndicator.stopAnimating()
-//            self.showMessage(withTitle: "Ops!", message: "Something went wrong.\nTry again later!")
-//        }
-//    }
-//}
-//
-//extension HomeViewController: viewModelDelegate {
-//    func showError(_ error: NetworkError) {
-//        self.showMessage(withTitle: "Ops!", message: error.localizedDescription)
-//    }
-//}

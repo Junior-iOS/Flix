@@ -11,7 +11,7 @@ struct Episode: Codable, Hashable {
     let id: Int
     let name: String
     let season: Int
-    let number: Int?
+    let number: Int
     let airdate: String?
     let airtime: String?
     let runtime: Int?

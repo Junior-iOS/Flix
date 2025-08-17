@@ -8,9 +8,10 @@
 import Foundation
 import UIKit
 import RxSwift
+import RxCocoa
 
 protocol EpisodesViewModelProtocol {
-    var episodesSubject: PublishSubject<[Episode]> { get }
+    var episodesRelay: BehaviorRelay<[Episode]> { get }
     var show: TVShow { get }
     var season: ShowSeasonsView.SeasonItem { get }
     var title: String { get }
@@ -21,7 +22,7 @@ final class EpisodesViewModel: EpisodesViewModelProtocol {
     
     // MARK: - Properties
     typealias SeasonItem = ShowSeasonsView.SeasonItem
-    let episodesSubject = PublishSubject<[Episode]>()
+    let episodesRelay = BehaviorRelay<[Episode]>(value: [])
     var show: TVShow
     var season: SeasonItem
     
@@ -58,7 +59,7 @@ final class EpisodesViewModel: EpisodesViewModelProtocol {
             .subscribe(onSuccess: { [weak self] episodes in
                 guard let self = self else { return }
                 let filteredEpisodes = episodes.filter { $0.season == self.season.seasonNumber }
-                self.episodesSubject.onNext(filteredEpisodes)
+                self.episodesRelay.accept(filteredEpisodes)
             }, onFailure: { [weak self] _ in
                 self?.handleFailure()
             })
@@ -68,6 +69,6 @@ final class EpisodesViewModel: EpisodesViewModelProtocol {
     private func handleFailure() {
         // Aqui você pode lidar com erros, como exibir um alerta ou logar o erro
         print("❌ Erro ao buscar episódios")
-        episodesSubject.onError(ServiceError.invalidData)
+        episodesRelay.accept([])
     }
 }

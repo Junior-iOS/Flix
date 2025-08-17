@@ -18,19 +18,7 @@ final class SeasonCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let badgeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .boldSystemFont(ofSize: 14)
-        label.minimumScaleFactor = 0.5
-        label.adjustsFontSizeToFitWidth = true
-        label.textColor = .white
-        label.backgroundColor = .systemRed
-        label.layer.cornerRadius = 12
-        label.clipsToBounds = true
-        label.textAlignment = .center
-        return label
-    }()
+    private let badgeLabel = NJBadgeLabel()
 
     private let yearLabel: UILabel = {
         let label = UILabel()

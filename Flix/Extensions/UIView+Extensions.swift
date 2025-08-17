@@ -48,4 +48,22 @@ extension UIView {
         }
         return text
     }
+
+        /// Rounds the specified corners with a given radius.
+        /// - Parameters:
+        ///   - corners: The corners to round.
+        ///   - radius: The radius for the rounded corners.
+    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
+        // Remove previously added mask if exists
+        self.layer.mask = nil
+        // For layout changes, ensure the path updates
+        let path = UIBezierPath(
+            roundedRect: self.bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        self.layer.mask = mask
+    }
 }
