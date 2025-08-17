@@ -13,10 +13,10 @@ final class EpisodeRowCell: UITableViewCell {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 12
-        layout.minimumInteritemSpacing = 12
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        layout.itemSize = CGSize(width: 140, height: 180)
+        layout.minimumLineSpacing = Constants.small
+        layout.minimumInteritemSpacing = Constants.small
+        layout.sectionInset = UIEdgeInsets(top: 0, left: Constants.medium, bottom: 0, right: Constants.medium)
+        layout.itemSize = Constants.itemSize
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -25,6 +25,12 @@ final class EpisodeRowCell: UITableViewCell {
         collectionView.register(EpisodeCollectionCell.self, forCellWithReuseIdentifier: EpisodeCollectionCell.identifier)
         return collectionView
     }()
+
+    private struct Constants {
+        static let small = CGFloat(12)
+        static let medium = CGFloat(16)
+        static let itemSize = CGSize(width: 140, height: 180)
+    }
 
     private var dataSource: UICollectionViewDiffableDataSource<Int, Episode>!
     private var disposeBag = DisposeBag()

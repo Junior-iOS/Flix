@@ -21,6 +21,12 @@ final class EpisodesViewController: UIViewController {
         return header
     }()
 
+    private struct Constants {
+        static let headerHeight: CGFloat = 450
+        static let heightForRow: CGFloat = 200
+        static let heightForHeaderInSection: CGFloat = 40
+    }
+
     override func loadView() {
         view = episodesView
     }
@@ -43,7 +49,7 @@ final class EpisodesViewController: UIViewController {
     private func setupTable() {
         episodesView.tableView.showsVerticalScrollIndicator = false
 
-        header = EpisodesHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
+        header = EpisodesHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: Constants.headerHeight))
         header.configure(with: viewModel.season)
         episodesView.tableView.tableHeaderView = header
 
@@ -72,11 +78,11 @@ extension EpisodesViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension EpisodesViewController: UITableViewDelegate {
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        200
+        Constants.heightForRow
     }
 
     func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-        40
+        Constants.heightForHeaderInSection
     }
 
     func tableView(_: UITableView, titleForHeaderInSection _: Int) -> String? {

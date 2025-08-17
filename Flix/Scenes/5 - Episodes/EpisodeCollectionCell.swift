@@ -5,11 +5,19 @@
 //  Created by NJ Development on 16/08/25.
 //
 
+import NJKit
 import SDWebImage
 import UIKit
 
 final class EpisodeCollectionCell: UICollectionViewCell {
     private let badgeLabel = NJBadgeLabel(textColor: .black, backgroundColor: .systemGray)
+
+    private struct Constants {
+        static let small = CGFloat(4)
+        static let medium = CGFloat(8)
+        static let large = CGFloat(24)
+        static let imageHeight = CGFloat(140)
+    }
 
     private lazy var  imageView: UIImageView = {
         let imageView = UIImageView(icon: .exclamationMarkIcloud)
@@ -65,17 +73,17 @@ final class EpisodeCollectionCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 140),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
 
-            badgeLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 8),
-            badgeLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -8),
-            badgeLabel.heightAnchor.constraint(equalToConstant: 24),
-            badgeLabel.widthAnchor.constraint(equalToConstant: 24),
+            badgeLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: Constants.medium),
+            badgeLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -Constants.medium),
+            badgeLabel.heightAnchor.constraint(equalToConstant: Constants.large),
+            badgeLabel.widthAnchor.constraint(equalToConstant: Constants.large),
 
-            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.small),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
+            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.medium),
 
             activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
