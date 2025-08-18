@@ -72,8 +72,9 @@ extension EpisodesViewController: UITableViewDataSource {
 
         cell.bind(to: viewModel.episodesRelay.asObservable())
         cell.didSelectEpisode = { episode in
-            print("Episódio selecionado: \(episode.summary)")
-            // Aqui você pode navegar para a tela de detalhes do episódio
+            let episodeDetailsViewModel = EpisodeViewModel(episode: episode)
+            let episodeDetailsVC = EpisodeDetailsViewController(viewModel: episodeDetailsViewModel)
+            self.present(episodeDetailsVC, animated: true)
         }
         return cell
     }
