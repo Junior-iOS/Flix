@@ -11,25 +11,37 @@ struct Cast: Codable, Hashable {
     let person: Person
     let character: Character?
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(person.id)
-    }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.person.id == rhs.person.id
-    }
+    // gera um id único a partir do person
+    var id: Int { person.id }
 }
 
-struct Person: Codable {
+struct Person: Codable, Hashable {
     let id: Int
     let url: String
     let name: String
     let birthday: String?
     let deathday: String?
     let image: PosterImage?
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
-struct Character: Codable {
+struct Character: Codable, Hashable {
     let id: Int
     let name: String
+    let image: PosterImage?
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Character, rhs: Character) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

@@ -21,6 +21,8 @@ final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
     // MARK: - Private Properties
     private let service: ServiceProtocol
     private let networkMonitor: NetworkMonitor
+    
+    // MARK: - Properties
     var show: TVShow
 
     // MARK: - Properties

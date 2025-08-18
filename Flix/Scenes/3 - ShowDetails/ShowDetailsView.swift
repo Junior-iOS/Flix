@@ -150,7 +150,7 @@ final class ShowDetailsView: UIView {
     lazy var episodesButton: NJButton = {
         NJButton(
             backgroundColor: .systemBlue,
-            title: "Ver Temporadas",
+            title: "Seasons",
             target: self,
             action: #selector(episodesButtonTapped)
         )
@@ -159,7 +159,7 @@ final class ShowDetailsView: UIView {
     lazy var castButton: NJButton = {
         NJButton(
             backgroundColor: .systemGreen,
-            title: "Ver Elenco",
+            title: "Cast",
             target: self,
             action: #selector(castButtonTapped)
         )

@@ -51,6 +51,8 @@ extension ShowDetailViewController: ShowDetailsViewDelegate {
     }
 
     func didTapCastButton() {
-        print("Cast Tapped")
+        let castViewModel = CastViewModel(show: viewModel.show)
+        let controller = CastViewController(viewModel: castViewModel)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }

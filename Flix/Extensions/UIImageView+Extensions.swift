@@ -48,4 +48,5 @@ public enum Icon: String {
     case starHalfFilled = "star.leadinghalf.filled"
     case starFill = "star.fill"
     case exclamationMarkIcloud = "exclamationmark.icloud"
+    case personFill = "person.fill"
 }
