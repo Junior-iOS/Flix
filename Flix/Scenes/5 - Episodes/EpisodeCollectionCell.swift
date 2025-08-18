@@ -56,7 +56,7 @@ final class EpisodeCollectionCell: UICollectionViewCell {
         super.prepareForReuse()
         imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
-            activityIndicator.stopAnimating()
+        activityIndicator.stopAnimating()
     }
 
     private func setup() {

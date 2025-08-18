@@ -94,11 +94,8 @@ final class EpisodeRowCell: UITableViewCell {
 // MARK: - UICollectionViewDelegate
 extension EpisodeRowCell: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Pegando o episódio selecionado
         guard indexPath.item < episodes.count else { return }
         let episode = episodes[indexPath.item]
-
-        // Notificando via closure
         didSelectEpisode?(episode)
     }
 }
