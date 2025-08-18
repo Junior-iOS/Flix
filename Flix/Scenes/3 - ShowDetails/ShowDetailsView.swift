@@ -89,15 +89,12 @@ final class ShowDetailsView: UIView {
             fontSize: 14
         )
     }()
-
-    lazy var durationStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [premieredLabel, statusLabel])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.spacing = 1
-        stack.distribution = .fillEqually
-        stack.axis = .vertical
-        return stack
-    }()
+    
+    lazy var durationStack = NJStackView(
+        arrangedSubviews: premieredLabel, statusLabel,
+        spacing: 1,
+        distribution: .fillEqually
+    )
 
     lazy var ratingImageView: UIImageView = {
         let imageView = UIImageView()
@@ -120,24 +117,17 @@ final class ShowDetailsView: UIView {
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }()
-
-    lazy var ratingStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [ratingImageView, ratingLabel])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.distribution = .fill
-        stack.alignment = .center
-        stack.spacing = 5
-        stack.axis = .horizontal
-        return stack
-    }()
-
-    lazy var showInfoStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [durationStack, ratingStack])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.distribution = .fill
-        stack.axis = .horizontal
-        return stack
-    }()
+    
+    lazy var ratingStack = NJStackView(
+        arrangedSubviews: ratingImageView, ratingLabel,
+        spacing: 5,
+        axis: .horizontal
+    )
+    
+    lazy var showInfoStack = NJStackView(
+        arrangedSubviews: durationStack, ratingStack,
+        axis: .horizontal
+    )
 
     lazy var summaryLabel: NJLabel = {
         NJLabel(
@@ -164,15 +154,12 @@ final class ShowDetailsView: UIView {
             action: #selector(castButtonTapped)
         )
     }()
-
-    lazy var buttonsStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [episodesButton, castButton])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.spacing = 12
-        stack.distribution = .fillEqually
-        return stack
-    }()
+    
+    lazy var buttonsStack = NJStackView(
+        arrangedSubviews: episodesButton, castButton,
+        spacing: 12,
+        distribution: .fillEqually
+    )
 
     // MARK: - Initialization
 

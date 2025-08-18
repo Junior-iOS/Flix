@@ -6,35 +6,52 @@
 //
 
 import UIKit
+import NJKit
 
 final class CastCell: UITableViewCell {
+    // MARK: - Private Properties
     private let actorImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        iv.layer.cornerRadius = 25
-        iv.backgroundColor = .secondarySystemBackground
-        return iv
+        let imageView = UIImageView(icon: .personFill)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 25
+        imageView.backgroundColor = .secondarySystemBackground
+        return imageView
     }()
+    
+    private lazy var nameLabel = NJLabel(
+        textColor: .white,
+        fontSize: 16,
+        fontWeight: .semibold,
+        numberOfLines: 0
+    )
+    
+    private lazy var characterLabel = NJLabel(
+        textColor: .secondaryLabel,
+        fontSize: 14,
+        fontWeight: .regular,
+        numberOfLines: 0
+    )
+    
+    private lazy var stackView = NJStackView(
+        arrangedSubviews: nameLabel, characterLabel,
+        spacing: 2,
+        axis: .vertical
+    )
 
-    private let nameLabel = UILabel()
-    private let characterLabel = UILabel()
-
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
 
-        nameLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        characterLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        characterLabel.textColor = .secondaryLabel
-
-        let stack = UIStackView(arrangedSubviews: [nameLabel, characterLabel])
-        stack.axis = .vertical
-        stack.spacing = 2
-        stack.translatesAutoresizingMaskIntoConstraints = false
-
-        contentView.addSubview(actorImageView)
-        contentView.addSubview(stack)
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
+    
+    // MARK: - Private Methods
+    private func setupUI() {
+        contentView.addSubviews(actorImageView, stackView)
 
         NSLayoutConstraint.activate([
             actorImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -42,15 +59,14 @@ final class CastCell: UITableViewCell {
             actorImageView.widthAnchor.constraint(equalToConstant: 50),
             actorImageView.heightAnchor.constraint(equalToConstant: 50),
 
-            stack.leadingAnchor.constraint(equalTo: actorImageView.trailingAnchor, constant: 12),
-            stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            stackView.leadingAnchor.constraint(equalTo: actorImageView.trailingAnchor, constant: 12),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
+    // MARK: - Methods
     func configure(with cast: Cast) {
         nameLabel.text = cast.person.name
         

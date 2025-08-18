@@ -57,15 +57,12 @@ final class EpisodeDetailsView: UIView {
         fontWeight: .semibold,
         numberOfLines: 0
     )
-
-    lazy var durationStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [runTimeLabel, airDateLabel, airTimeLabel])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.spacing = 1
-        stack.distribution = .fillEqually
-        stack.axis = .vertical
-        return stack
-    }()
+    
+    lazy var durationStack = NJStackView(
+        arrangedSubviews: runTimeLabel, airDateLabel, airTimeLabel,
+        spacing: 1,
+        distribution: .fillEqually,
+    )
 
     lazy var ratingImageView: UIImageView = {
         let imageView = UIImageView()
@@ -88,24 +85,17 @@ final class EpisodeDetailsView: UIView {
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }()
-
-    lazy var ratingStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [ratingImageView, ratingLabel])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.distribution = .fill
-        stack.alignment = .center
-        stack.spacing = 5
-        stack.axis = .horizontal
-        return stack
-    }()
-
-    lazy var showInfoStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [durationStack, ratingStack])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.distribution = .fill
-        stack.axis = .horizontal
-        return stack
-    }()
+    
+    lazy var ratingStack = NJStackView(
+        arrangedSubviews: ratingImageView, ratingLabel,
+        spacing: 5,
+        axis: .horizontal
+    )
+    
+    lazy var showInfoStack = NJStackView(
+        arrangedSubviews: durationStack, ratingStack,
+        axis: .horizontal
+    )
 
     private lazy var summaryLabel = NJLabel(
         textColor: .white,

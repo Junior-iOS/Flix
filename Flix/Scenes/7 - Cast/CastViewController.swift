@@ -23,8 +23,8 @@ final class CastViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Cast"
-        bindViewModel()
         viewModel.fetchCast()
+        bindViewModel()
     }
     
     // MARK: - Init
