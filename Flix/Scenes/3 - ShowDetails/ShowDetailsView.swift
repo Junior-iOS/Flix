@@ -137,7 +137,7 @@ final class ShowDetailsView: UIView {
         )
     }()
 
-    lazy var episodesButton: NJButton = {
+    lazy var seasonsButton: NJButton = {
         NJButton(
             backgroundColor: .systemBlue,
             title: "Seasons",
@@ -156,7 +156,7 @@ final class ShowDetailsView: UIView {
     }()
     
     lazy var buttonsStack = NJStackView(
-        arrangedSubviews: episodesButton, castButton,
+        arrangedSubviews: seasonsButton, castButton,
         spacing: 12,
         distribution: .fillEqually
     )
@@ -190,17 +190,6 @@ final class ShowDetailsView: UIView {
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Buttons Stack (fixo no bottom)
-            buttonsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.medium),
-            buttonsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.medium),
-            buttonsStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.medium),
-
-            // Episodes Button
-            episodesButton.heightAnchor.constraint(equalToConstant: Constants.large),
-
-            // Cast Button
-            castButton.heightAnchor.constraint(equalToConstant: Constants.large),
-
             // ScrollView (não vai até o bottom, deixa espaço para os botões)
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -243,7 +232,18 @@ final class ShowDetailsView: UIView {
             summaryLabel.topAnchor.constraint(equalTo: showInfoStack.bottomAnchor, constant: Constants.medium),
             summaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             summaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
-            summaryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.medium)
+            summaryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.medium),
+            
+            // Buttons Stack (fixo no bottom)
+            buttonsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.medium),
+            buttonsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.medium),
+            buttonsStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.medium),
+
+            // Episodes Button
+            seasonsButton.heightAnchor.constraint(equalToConstant: Constants.large),
+
+            // Cast Button
+            castButton.heightAnchor.constraint(equalToConstant: Constants.large),
         ])
     }
 

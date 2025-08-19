@@ -8,22 +8,28 @@
 import UIKit
 
 class CastDetailsViewController: UIViewController {
+    
+    // MARK: - Private Properties
+    private let viewModel: CastDetailsViewModelProtocol
+    private let castDetailsView = CastDetailsView()
+    
+    // MARK: - Init
+    override func loadView() {
+        view = castDetailsView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        castDetailsView.configure(with: viewModel.cast.person)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    init(viewModel: CastDetailsViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        
+        print(viewModel.cast)
     }
-    */
-
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
 }

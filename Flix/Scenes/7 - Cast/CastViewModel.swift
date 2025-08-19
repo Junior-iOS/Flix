@@ -14,6 +14,7 @@ import UIKit
 protocol CastViewModelProtocol {
     func fetchCast()
     var castSubject: PublishSubject<[Cast]> { get }
+    var cast: [Cast] { get set }
     var title: String { get }
     var show: TVShow { get }
 }
@@ -28,9 +29,10 @@ final class CastViewModel: CastViewModelProtocol {
     // MARK: - Properties
     var castSubject: PublishSubject<[Cast]> = PublishSubject<[Cast]>()
     var show: TVShow
+    var cast: [Cast] = []
     
     var title: String {
-        ""
+        "Cast"
     }
     
     // MARK: - Init
