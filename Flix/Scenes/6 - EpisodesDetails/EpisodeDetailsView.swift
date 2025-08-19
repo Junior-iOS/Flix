@@ -124,12 +124,12 @@ final class EpisodeDetailsView: UIView {
 
     // MARK: - Private Methods
     private func setupView() {
+        backgroundColor = .systemBackground
         setHierarchy()
         setConstraints()
     }
 
     private func setHierarchy() {
-        backgroundColor = .systemBackground
         addSubviews(
             episodeImage,
             episodeTitleLabel,
@@ -173,7 +173,7 @@ final class EpisodeDetailsView: UIView {
         ratingLabel.text = "\(episode.rating.average ?? 0)"
         summaryLabel.text = episode.summary?.removingHTMLOccurances
 
-        if let image = episode.image?.original, let url = URL(string: image) {
+        if let urlString = episode.image?.original, let url = URL(string: urlString) {
             episodeImage.sd_setImage(
                 with: url,
                 placeholderImage: UIImage(icon: .exclamationMarkIcloud),

@@ -12,6 +12,7 @@ import UIKit
 protocol ShowSeasonsViewModelProtocol {
     var seasonsSubject: PublishSubject<[Season]> { get }
     var show: TVShow { get }
+    var title: String { get }
     func fetchSeasons()
 }
 
@@ -19,6 +20,7 @@ final class ShowSeasonsViewModel: ShowSeasonsViewModelProtocol {
     // MARK: - Properties
     let seasonsSubject = PublishSubject<[Season]>()
     var show: TVShow
+    var title = "Seasons"
 
     // MARK: - Private Properties
     private let service: ServiceProtocol

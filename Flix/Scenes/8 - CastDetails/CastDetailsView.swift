@@ -13,9 +13,10 @@ final class CastDetailsView: UIView {
     
     // MARK: - Private Properties
     private struct Constants {
-        static let small: CGFloat = 8
         static let medium: CGFloat = 16
-        static let large: CGFloat = 44
+        static let large: CGFloat = 24
+        static let ageSize: CGFloat = 100
+        static let coverWidth: CGFloat = 300
         static let coverHeight: CGFloat = 350
         static let ratingSize = CGSize(width: 10, height: 10)
     }
@@ -101,6 +102,9 @@ final class CastDetailsView: UIView {
     
     // MARK: - Setup
     private func setupView() {
+        backgroundColor = .systemBackground
+        overrideUserInterfaceStyle = .dark
+        
         addSubviews(
             coverImageView,
             nameStack,
@@ -108,31 +112,36 @@ final class CastDetailsView: UIView {
         )
         
         NSLayoutConstraint.activate([
-            coverImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 24),
+            coverImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.large),
             coverImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            coverImageView.widthAnchor.constraint(equalToConstant: 300),
-            coverImageView.heightAnchor.constraint(equalToConstant: 350),
+            coverImageView.widthAnchor.constraint(equalToConstant: Constants.coverWidth),
+            coverImageView.heightAnchor.constraint(equalToConstant: Constants.coverHeight),
 
-            nameStack.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: 24),
-            nameStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            nameStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            nameStack.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.large),
+            nameStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.large),
+            nameStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
 
-            lifeStack.topAnchor.constraint(equalTo: nameStack.bottomAnchor, constant: 16),
-            lifeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            lifeStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
-            lifeStack.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -24),
+            lifeStack.topAnchor.constraint(equalTo: nameStack.bottomAnchor, constant: Constants.medium),
+            lifeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.large),
+            lifeStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
+            lifeStack.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -Constants.large),
             
-            ageLabel.widthAnchor.constraint(equalToConstant: 100)
+            ageLabel.widthAnchor.constraint(equalToConstant: Constants.ageSize)
         ])
     }
     
     // MARK: - Configuration
-    func configure(with person: Person) {
-        if let urlString = person.image?.original, let url = URL(string: urlString) {
-            self.coverImageView.sd_setImage(with: url) { [weak self] image, _, _, _ in
+    func configure(with vm: CastDetailsViewModelProtocol) {
+        nameLabel.text = vm.nameText
+        birthdayLabel.text = vm.birthdayText
+        deathdayLabel.text = vm.deathdayText
+        ageLabel.text = vm.ageText
+        starImageView.isHidden = !vm.showStar
+        
+        if let url = vm.coverImageURL {
+            coverImageView.sd_setImage(with: url) { [weak self] image, _, _, _ in
                 guard let self, let image else { return }
-                
-                if person.deathday != nil {
+                if vm.shouldApplyGrayScale {
                     let ciImage = CIImage(image: image)
                     let filter = CIFilter(name: "CIPhotoEffectMono")
                     filter?.setValue(ciImage, forKey: kCIInputImageKey)
@@ -147,18 +156,6 @@ final class CastDetailsView: UIView {
                     self.coverImageView.image = image
                 }
             }
-        }
-        
-        nameLabel.text = person.name
-        birthdayLabel.text = dateFormat(text: "Birthday:", person.birthday ?? "Unknown")
-        
-        if let deathday = person.deathday {
-            deathdayLabel.text = dateFormat(text: "Deathday:", deathday)
-            starImageView.isHidden = false
-        }
-    
-        if let birthday = person.birthday, let age = calculateAge(from: birthday) {
-            ageLabel.text = "Age: \(age)"
         }
     }
 }

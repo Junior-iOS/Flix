@@ -46,7 +46,7 @@ final class EpisodesHeaderView: UIView {
     }
 
     func configure(with season: SeasonItem) {
-        guard let image = season.imageURL, let url = URL(string: image) else { return }
+        guard let urlString = season.imageURL, let url = URL(string: urlString) else { return }
         DispatchQueue.main.async {
             self.episodeImage.sd_setImage(with: url)
         }

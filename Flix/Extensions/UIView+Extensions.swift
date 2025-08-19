@@ -23,21 +23,6 @@ public extension UIView {
         view.layer.shadowRadius = 5.0
     }
 
-    func calculateAge(from birthday: String) -> Int? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd"
-
-        guard let birthDate = dateFormatter.date(from: birthday) else {
-            return nil
-        }
-
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let ageComponents = calendar.dateComponents([.year], from: birthDate, to: currentDate)
-
-        return ageComponents.year
-    }
-
     func dateFormat(text: String = "", _ date: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"

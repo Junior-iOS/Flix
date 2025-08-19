@@ -9,6 +9,18 @@ import NJKit
 import UIKit
 
 final class SeasonCell: UICollectionViewCell {
+    // MARK: - Private Properties
+    
+    private struct Constants {
+        static let imageSize: CGFloat = 200
+        static let tinyPadding: CGFloat = 4
+        static let smallPadding: CGFloat = 8
+        static let yearLabelHeight: CGFloat = 20
+        static let bagdeSize: CGFloat = 28
+    }
+    
+    private let badgeLabel = NJBadgeLabel(cornerRadius: Constants.bagdeSize / 2)
+    
     private let seasonImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -18,8 +30,6 @@ final class SeasonCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         return imageView
     }()
-
-    private let badgeLabel = NJBadgeLabel()
 
     private let yearLabel: UILabel = {
         let label = UILabel()
@@ -39,6 +49,7 @@ final class SeasonCell: UICollectionViewCell {
         return indicator
     }()
 
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -47,6 +58,7 @@ final class SeasonCell: UICollectionViewCell {
     @available(*, unavailable)
     required init?(coder _: NSCoder) { nil }
 
+    // MARK: - Private Methods
     private func setup() {
         contentView.addSubviews(
             seasonImageView,
@@ -59,24 +71,25 @@ final class SeasonCell: UICollectionViewCell {
             seasonImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             seasonImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             seasonImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            seasonImageView.heightAnchor.constraint(equalToConstant: 200),
+            seasonImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize),
 
             activityIndicator.centerXAnchor.constraint(equalTo: seasonImageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: seasonImageView.centerYAnchor),
 
-            badgeLabel.topAnchor.constraint(equalTo: seasonImageView.topAnchor, constant: -8),
-            badgeLabel.trailingAnchor.constraint(equalTo: seasonImageView.trailingAnchor, constant: 8),
-            badgeLabel.heightAnchor.constraint(equalToConstant: 24),
-            badgeLabel.widthAnchor.constraint(equalToConstant: 24),
+            badgeLabel.topAnchor.constraint(equalTo: seasonImageView.topAnchor, constant: -Constants.smallPadding),
+            badgeLabel.trailingAnchor.constraint(equalTo: seasonImageView.trailingAnchor, constant: Constants.smallPadding),
+            badgeLabel.heightAnchor.constraint(equalToConstant: Constants.bagdeSize),
+            badgeLabel.widthAnchor.constraint(equalToConstant: Constants.bagdeSize),
 
-            yearLabel.topAnchor.constraint(equalTo: seasonImageView.bottomAnchor, constant: 4),
+            yearLabel.topAnchor.constraint(equalTo: seasonImageView.bottomAnchor, constant: Constants.tinyPadding),
             yearLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             yearLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            yearLabel.heightAnchor.constraint(equalToConstant: 20)
+            yearLabel.heightAnchor.constraint(equalToConstant: Constants.yearLabelHeight)
         ])
     }
 
+    // MARK: - Public Methods
     func configure(with item: ShowSeasonsView.SeasonItem) {
         seasonImageView.sd_setImage(with: URL(string: item.imageURL ?? "")) { [weak self] image, _, _, _ in
             guard let self else { return }

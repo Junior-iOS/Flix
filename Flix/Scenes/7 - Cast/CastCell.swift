@@ -10,12 +10,18 @@ import NJKit
 
 final class CastCell: UITableViewCell {
     // MARK: - Private Properties
+    private struct Constants {
+        static let imageSize: CGFloat = 50
+        static let smallPadding: CGFloat = 12
+        static let mediumPadding: CGFloat = 16
+    }
+    
     private let actorImageView: UIImageView = {
         let imageView = UIImageView(icon: .personFill)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 25
+        imageView.layer.cornerRadius = Constants.imageSize / 2
         imageView.backgroundColor = .secondarySystemBackground
         return imageView
     }()
@@ -39,11 +45,14 @@ final class CastCell: UITableViewCell {
         spacing: 2,
         axis: .vertical
     )
+    
+    var didSelectCast: ((Cast) -> Void)?
 
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        backgroundColor = .systemBackground
     }
 
     @available(*, unavailable)
@@ -54,15 +63,16 @@ final class CastCell: UITableViewCell {
         contentView.addSubviews(actorImageView, stackView)
 
         NSLayoutConstraint.activate([
-            actorImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            actorImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.mediumPadding),
+            actorImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.mediumPadding),
+            actorImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.mediumPadding),
             actorImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            actorImageView.widthAnchor.constraint(equalToConstant: 50),
-            actorImageView.heightAnchor.constraint(equalToConstant: 50),
+            actorImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize),
+            actorImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize),
 
-            stackView.leadingAnchor.constraint(equalTo: actorImageView.trailingAnchor, constant: 12),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            stackView.leadingAnchor.constraint(equalTo: actorImageView.trailingAnchor, constant: Constants.smallPadding),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.mediumPadding),
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
 
@@ -74,7 +84,7 @@ final class CastCell: UITableViewCell {
             characterLabel.text = "as \(character)"
         }
         
-        if let image = cast.person.image?.original, let url = URL(string: image) {
+        if let urlString = cast.person.image?.original, let url = URL(string: urlString) {
             actorImageView.sd_setImage(with: url)
         } else {
             actorImageView.image = UIImage(icon: .personFill)

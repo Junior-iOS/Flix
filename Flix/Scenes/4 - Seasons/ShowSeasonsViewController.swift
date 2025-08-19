@@ -34,7 +34,7 @@ final class ShowSeasonsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Seasons"
+        title = viewModel.title
         bindViewModel()
         viewModel.fetchSeasons()
     }

@@ -7,29 +7,28 @@
 
 import UIKit
 
-class CastDetailsViewController: UIViewController {
-    
+final class CastDetailsViewController: UIViewController {
     // MARK: - Private Properties
     private let viewModel: CastDetailsViewModelProtocol
     private let castDetailsView = CastDetailsView()
     
     // MARK: - Init
-    override func loadView() {
-        view = castDetailsView
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        castDetailsView.configure(with: viewModel.cast.person)
-    }
-    
     init(viewModel: CastDetailsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        
-        print(viewModel.cast)
     }
     
-    @available(*, unavailable)
-    required init?(coder: NSCoder) { nil }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+        view = castDetailsView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        castDetailsView.configure(with: viewModel)
+    }
 }

@@ -39,15 +39,8 @@ final class CastViewController: UIViewController {
     // MARK: - Private Methods
     private func setup() {
         title = viewModel.title
-        
-        castView.onSelectCast = { [weak self] index in
-            guard let self else { return }
-            let person = self.viewModel.cast[index]
-            let detailsVM = CastDetailsViewModel(cast: person)
-            let detailsVC = CastDetailsViewController(viewModel: detailsVM)
-            self.navigationController?.pushViewController(detailsVC, animated: true)
-        }
-        
+        castView.tableView.delegate = self
+        castView.tableView.dataSource = self
         viewModel.fetchCast()
     }
 
@@ -56,8 +49,33 @@ final class CastViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] cast in
                 self?.viewModel.cast = cast
-                self?.castView.apply(cast)
+                self?.castView.tableView.reloadData()
             }
             .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
+extension CastViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.cast.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CastCell.identifier, for: indexPath) as? CastCell else {
+            return UITableViewCell()
+        }
+        let person = viewModel.cast[indexPath.row]
+        cell.configure(with: person)
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let cast = viewModel.cast[indexPath.row]
+        let detailsVM = CastDetailsViewModel(person: cast.person)
+        let detailsVC = CastDetailsViewController(viewModel: detailsVM)
+        self.present(detailsVC, animated: true)
     }
 }
