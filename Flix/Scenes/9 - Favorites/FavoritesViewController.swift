@@ -16,6 +16,14 @@ final class FavoritesViewController: UIViewController {
     private var viewModel: FavoritesViewModelProtocol
     private let disposeBag = DisposeBag()
     
+    private var sortedShows: [TVShow] {
+        (0..<viewModel.numberOfRowsInSection).map {
+            viewModel.cellForRow(at: IndexPath(row: $0, section: 0))
+        }.sorted {
+            $0.name < $1.name
+        }
+    }
+    
     // MARK: - Init
     override func loadView() {
         super.loadView()
@@ -57,7 +65,7 @@ final class FavoritesViewController: UIViewController {
     
     // MARK: - Public Methods
     override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
-        if viewModel.numberOfRowsInSection == 0 {
+        if sortedShows.count == 0 {
             var config = UIContentUnavailableConfiguration.empty()
             config.image = UIImage(icon: .star)
             config.text = "No Favorites Yet"
@@ -71,12 +79,12 @@ final class FavoritesViewController: UIViewController {
 
 extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsInSection
+        return sortedShows.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesCell.identifier, for: indexPath) as? FavoritesCell else { return UITableViewCell() }
-        let show = viewModel.cellForRow(at: indexPath)
+        let show = sortedShows[indexPath.row]
         cell.configure(show: show)
         return cell
     }
@@ -84,7 +92,7 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let show = viewModel.cellForRow(at: indexPath)
+        let show = sortedShows[indexPath.row]
         let detailsViewModel = ShowDetailsViewModel(show: show)
         let detailVC = ShowDetailsViewController(viewModel: detailsViewModel)
         navigationController?.pushViewController(detailVC, animated: true)
@@ -92,10 +100,15 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            guard indexPath.row < viewModel.numberOfRowsInSection else { return }
-            viewModel.removeShow(at: indexPath.row)
-            viewModel.saveShows()
-            setNeedsUpdateContentUnavailableConfiguration()
+            guard indexPath.row < sortedShows.count else { return }
+            let showToRemove = sortedShows[indexPath.row]
+            if let originalIndex = (0..<viewModel.numberOfRowsInSection).first(where: {
+                viewModel.cellForRow(at: IndexPath(row: $0, section: 0)).name == showToRemove.name
+            }) {
+                viewModel.removeShow(at: originalIndex)
+                viewModel.saveShows()
+                setNeedsUpdateContentUnavailableConfiguration()
+            }
         }
     }
 }

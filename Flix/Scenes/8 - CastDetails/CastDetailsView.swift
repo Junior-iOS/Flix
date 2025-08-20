@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import NJKit
 
+protocol CastDetailsViewDelegate: AnyObject {
+    func didTapTvmaze()
+}
+
 final class CastDetailsView: UIView {
     
     // MARK: - Private Properties
@@ -89,6 +93,20 @@ final class CastDetailsView: UIView {
         alignment: .center
     )
     
+    private lazy var tvMazeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Visit TVMaze", for: .normal)
+        button.setTitleColor(.systemGreen, for: .normal)
+        button.layer.cornerRadius = 8
+        button.layer.masksToBounds = true
+        button.backgroundColor = .systemGray6
+        button.addTarget(self, action: #selector(handleVisitTvmaze), for: .touchUpInside)
+        return button
+    }()
+    
+    weak var delegate: CastDetailsViewDelegate?
+    
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -108,7 +126,8 @@ final class CastDetailsView: UIView {
         addSubviews(
             coverImageView,
             nameStack,
-            lifeStack
+            lifeStack,
+            tvMazeButton
         )
         
         NSLayoutConstraint.activate([
@@ -124,10 +143,19 @@ final class CastDetailsView: UIView {
             lifeStack.topAnchor.constraint(equalTo: nameStack.bottomAnchor, constant: Constants.medium),
             lifeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.large),
             lifeStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
-            lifeStack.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -Constants.large),
+//            lifeStack.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -Constants.large),
             
-            ageLabel.widthAnchor.constraint(equalToConstant: Constants.ageSize)
+            ageLabel.widthAnchor.constraint(equalToConstant: Constants.ageSize),
+            
+            tvMazeButton.topAnchor.constraint(equalTo: lifeStack.bottomAnchor, constant: Constants.large),
+            tvMazeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
+            tvMazeButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.large),
+            tvMazeButton.heightAnchor.constraint(equalToConstant: Constants.large)
         ])
+    }
+    
+    @objc private func handleVisitTvmaze() {
+        delegate?.didTapTvmaze()
     }
     
     // MARK: - Configuration

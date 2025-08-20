@@ -21,11 +21,21 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="popcorn.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="d40-yA-aHw">
+                                <rect key="frame" x="76.666666666666686" y="360.66666666666669" width="240" height="132"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="CIp-ik-TUr"/>
+                                    <constraint firstAttribute="width" constant="240" id="iUj-jB-yGd"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="viewFlipsideBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="d40-yA-aHw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="1wT-cU-Y1R"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Ung-64-Zny" secondAttribute="bottom" constant="20" id="HQq-fO-k15"/>
+                            <constraint firstItem="d40-yA-aHw" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Ted-Ae-aMg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ung-64-Zny" secondAttribute="trailing" constant="20" id="bcd-q4-RD5"/>
                             <constraint firstItem="Ung-64-Zny" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="eci-Hy-jLe"/>
                         </constraints>
@@ -37,6 +47,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="popcorn.fill" catalog="system" width="98" height="128"/>
         <systemColor name="viewFlipsideBackgroundColor">
             <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

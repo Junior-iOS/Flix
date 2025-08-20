@@ -16,6 +16,7 @@ protocol CastDetailsViewModelProtocol {
     var coverImageURL: URL? { get }
     var showStar: Bool { get }
     var shouldApplyGrayScale: Bool { get }
+    var urlString: String { get }
 }
 
 final class CastDetailsViewModel: CastDetailsViewModelProtocol {
@@ -26,10 +27,12 @@ final class CastDetailsViewModel: CastDetailsViewModelProtocol {
     let coverImageURL: URL?
     let showStar: Bool
     let shouldApplyGrayScale: Bool
+    let urlString: String
 
     init(person: Person) {
         self.nameText = person.name
         self.birthdayText = CastDetailsViewModel.formatDate(text: "Birthday:", person.birthday)
+        self.urlString = person.url
 
         if let deathday = person.deathday {
             self.deathdayText = CastDetailsViewModel.formatDate(text: "Deathday:", deathday)
