@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-final class ShowDetailViewController: UIViewController {
+final class ShowDetailsViewController: UIViewController {
     // MARK: - Private Properties
-    private let detailView = ShowDetailsView()
+    private(set) var detailView = ShowDetailsView()
     private let viewModel: ShowDetailsViewModelProtocol
+    private let disposeBag = DisposeBag()
+    private var favoriteButton: UIBarButtonItem!
 
     // MARK: - Init
 
@@ -18,32 +22,57 @@ final class ShowDetailViewController: UIViewController {
         view = detailView
     }
 
-    init(_ viewModel: ShowDetailsViewModelProtocol) {
+    init(viewModel: ShowDetailsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder _: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupFavoriteButton()
+        bindViewModel()
         configureData()
     }
-
+    
     // MARK: - Private Methods
-
+    
     private func configureData() {
         title = viewModel.title
         detailView.delegate = self
         detailView.configureData(with: viewModel.show)
     }
+
+    private func setupFavoriteButton() {
+        favoriteButton = UIBarButtonItem(
+            image: UIImage(systemName: "heart"),
+            style: .plain,
+            target: self,
+            action: #selector(favoriteButtonTapped)
+        )
+        navigationItem.rightBarButtonItem = favoriteButton
+    }
+
+    private func bindViewModel() {
+        viewModel.isFavorite
+            .drive(onNext: { [weak self] isFavorite in
+                let imageName = isFavorite ? "heart.fill" : "heart"
+                self?.favoriteButton.image = UIImage(systemName: imageName)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    @objc private func favoriteButtonTapped() {
+        viewModel.toggleFavorite()
+    }
 }
 
 // MARK: - ShowDetailsViewDelegate
 
-extension ShowDetailViewController: ShowDetailsViewDelegate {
+extension ShowDetailsViewController: ShowDetailsViewDelegate {
     func didTapSeasonsButton() {
         let showSeasonsViewModel = ShowSeasonsViewModel(show: viewModel.show)
         let controller = ShowSeasonsViewController(viewModel: showSeasonsViewModel)

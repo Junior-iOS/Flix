@@ -15,15 +15,21 @@ protocol ShowDetailsViewModelProtocol {
     func toggleFavorite()
     var title: String { get }
     var show: TVShow { get }
+    var isFavorite: Driver<Bool> { get }
 }
 
 final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
     // MARK: - Private Properties
     private let service: ServiceProtocol
     private let networkMonitor: NetworkMonitor
+    private let isFavoriteRelay = BehaviorRelay<Bool>(value: false)
     
     // MARK: - Properties
     var show: TVShow
+
+    var isFavorite: Driver<Bool> {
+        isFavoriteRelay.asDriver()
+    }
 
     // MARK: - Properties
     var title: String {
@@ -39,42 +45,58 @@ final class ShowDetailsViewModel: ShowDetailsViewModelProtocol {
         self.show = show
         self.service = service
         self.networkMonitor = networkMonitor
-        checkFavoriteStatus()
+
+        // Restaura a lógica baseada em UserDefaults para isFavoriteRelay
+        self.checkFavoriteStatus()
     }
 
-//    // MARK: - Methods
+    // MARK: - Methods
     func toggleFavorite() {
-//        let currentStatus = isFavoriteRelay.value
-//        isFavoriteRelay.accept(!currentStatus)
-//        
-//        if !currentStatus {
-//            // Adicionar aos favoritos
-//            saveToFavorites()
-//        } else {
-//            // Remover dos favoritos
-//            removeFromFavorites()
-//        }
+        let currentStatus = isFavoriteRelay.value
+        isFavoriteRelay.accept(!currentStatus)
+        
+        if !currentStatus {
+            saveToFavorites()
+        } else {
+            removeFromFavorites()
+        }
     }
 
-//    // MARK: - Private Methods
-
+    // MARK: - Private Methods
     private func checkFavoriteStatus() {
-//        let favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        if let data = UserDefaults.standard.data(forKey: "favorites"),
+           let favorites = try? JSONDecoder().decode([Int].self, from: data) {
+            isFavoriteRelay.accept(favorites.contains(show.id))
+        } else {
+            isFavoriteRelay.accept(false)
+        }
     }
 
     private func saveToFavorites() {
-        var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        var favorites: [Int] = []
+        if let data = UserDefaults.standard.data(forKey: "favorites"),
+           let decoded = try? JSONDecoder().decode([Int].self, from: data) {
+            favorites = decoded
+        }
         if !favorites.contains(show.id) {
             favorites.append(show.id)
-            UserDefaults.standard.set(favorites, forKey: "favorites")
-            print("✅ Show adicionado aos favoritos")
+            if let data = try? JSONEncoder().encode(favorites) {
+                UserDefaults.standard.set(data, forKey: "favorites")
+                print("✅ Show adicionado aos favoritos")
+            }
         }
     }
 
     private func removeFromFavorites() {
-        var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        var favorites: [Int] = []
+        if let data = UserDefaults.standard.data(forKey: "favorites"),
+           let decoded = try? JSONDecoder().decode([Int].self, from: data) {
+            favorites = decoded
+        }
         favorites.removeAll { $0 == show.id }
-        UserDefaults.standard.set(favorites, forKey: "favorites")
-        print("❌ Show removido dos favoritos")
+        if let data = try? JSONEncoder().encode(favorites) {
+            UserDefaults.standard.set(data, forKey: "favorites")
+            print("❌ Show removido dos favoritos")
+        }
     }
 }

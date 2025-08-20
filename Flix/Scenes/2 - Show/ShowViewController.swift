@@ -164,7 +164,7 @@ extension ShowViewController: UICollectionViewDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
         let show = viewModel.cellForItem(at: indexPath)
         let showDetailsViewModel = ShowDetailsViewModel(show: show)
-        let controller = ShowDetailViewController(showDetailsViewModel)
+        let controller = ShowDetailsViewController(viewModel: showDetailsViewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
 }
