@@ -143,7 +143,6 @@ final class CastDetailsView: UIView {
             lifeStack.topAnchor.constraint(equalTo: nameStack.bottomAnchor, constant: Constants.medium),
             lifeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.large),
             lifeStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
-//            lifeStack.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -Constants.large),
             
             ageLabel.widthAnchor.constraint(equalToConstant: Constants.ageSize),
             

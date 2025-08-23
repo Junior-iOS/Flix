@@ -20,6 +20,7 @@ protocol CastDetailsViewModelProtocol {
 }
 
 final class CastDetailsViewModel: CastDetailsViewModelProtocol {
+    // MARK: - Properties
     let nameText: String
     let birthdayText: String
     let deathdayText: String?
@@ -29,6 +30,7 @@ final class CastDetailsViewModel: CastDetailsViewModelProtocol {
     let shouldApplyGrayScale: Bool
     let urlString: String
 
+    // MARK: - Init
     init(person: Person) {
         self.nameText = person.name
         self.birthdayText = CastDetailsViewModel.formatDate(text: "Birthday:", person.birthday)
@@ -57,6 +59,7 @@ final class CastDetailsViewModel: CastDetailsViewModelProtocol {
         self.shouldApplyGrayScale = person.deathday != nil
     }
     
+    // MARK: - Private Methods
     private static func formatDate(text: String, _ dateString: String?) -> String {
         guard let dateString = dateString, !dateString.isEmpty else {
             return "\(text) Unknown"

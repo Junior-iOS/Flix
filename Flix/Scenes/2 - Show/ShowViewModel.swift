@@ -19,6 +19,8 @@ protocol ShowViewModelProtocol {
     func searchBar(textDidChange searchText: String)
     func loadNextPage()
     func shouldRefetchData() -> Bool
+    
+    var title: String { get }
     var showSubject: PublishSubject<[TVShow]> { get }
     var shows: Driver<[TVShow]> { get }
     var isLoading: Driver<Bool> { get }
@@ -37,6 +39,7 @@ final class ShowViewModel: ShowViewModelProtocol {
     private let disposeBag = DisposeBag()
 
     // MARK: - Properties
+    var title = "TV Shows"
     var showSubject = PublishSubject<[TVShow]>()
     var shows: Driver<[TVShow]> { showsRelay.asDriver() }
     var numberOfItemsInSection: Int { showsRelay.value.count }

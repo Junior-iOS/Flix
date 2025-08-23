@@ -57,6 +57,15 @@ final class CastViewController: UIViewController {
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
 extension CastViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let cast = viewModel.cast[indexPath.row]
+        let detailsVM = CastDetailsViewModel(person: cast.person)
+        let detailsVC = CastDetailsViewController(viewModel: detailsVM)
+        self.present(detailsVC, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.cast.count
     }
@@ -68,14 +77,5 @@ extension CastViewController: UITableViewDataSource, UITableViewDelegate {
         let person = viewModel.cast[indexPath.row]
         cell.configure(with: person)
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let cast = viewModel.cast[indexPath.row]
-        let detailsVM = CastDetailsViewModel(person: cast.person)
-        let detailsVC = CastDetailsViewController(viewModel: detailsVM)
-        self.present(detailsVC, animated: true)
     }
 }

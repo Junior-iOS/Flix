@@ -26,7 +26,6 @@ final class FavoritesViewController: UIViewController {
     
     // MARK: - Init
     override func loadView() {
-        super.loadView()
         view = favoritesView
     }
     
@@ -77,6 +76,7 @@ final class FavoritesViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDelegates / DataSource
 extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sortedShows.count

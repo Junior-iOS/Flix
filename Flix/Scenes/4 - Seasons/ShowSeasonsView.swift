@@ -127,7 +127,6 @@ final class ShowSeasonsView: UIView {
 
     // MARK: - Public API
 
-    /// Atualiza a lista com temporadas (mapeie seu `Season` para `SeasonItem` antes ou use o helper abaixo)
     func apply(items: [SeasonItem], animating: Bool = true) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])

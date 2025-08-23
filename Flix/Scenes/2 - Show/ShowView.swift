@@ -43,7 +43,8 @@ final class ShowView: UIView {
         setupView()
     }
 
-    required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
 
     // MARK: - Private Methods
     private func setupView() {
@@ -53,7 +54,7 @@ final class ShowView: UIView {
     }
 
     private func setHierarchy() {
-        addSubviews(collectionView, activityIndicator/*, spinner, loadingLabel*/)
+        addSubviews(collectionView, activityIndicator)
     }
 
     private func setConstraints() {

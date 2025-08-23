@@ -18,8 +18,10 @@ protocol FavoritesViewModelProtocol {
     func saveShows()
     func removeShow(at index: Int)
     func setDelegate(_ delegate: FavoritesViewModelDelegate)
+    
     var numberOfRowsInSection: Int { get }
     var title: String { get }
+    var key: String { get }
 }
 
 final class FavoritesViewModel: FavoritesViewModelProtocol {
@@ -31,23 +33,25 @@ final class FavoritesViewModel: FavoritesViewModelProtocol {
     // MARK: - Properties
     weak var delegate: FavoritesViewModelDelegate?
     var title: String { "Favorites" }
+    var key: String { "favorites" }
     
     // MARK: - Init
     init() {
         loadShows()
     }
     
-    // MARK: - Private Methods
+    // MARK: - Properties
     var numberOfRowsInSection: Int {
         shows.count
     }
     
+    // MARK: - Public Methods
     func cellForRow(at indexPath: IndexPath) -> TVShow {
         return shows[indexPath.row]
     }
     
     func loadShows() {
-        guard let data = UserDefaults.standard.data(forKey: "favorites"),
+        guard let data = UserDefaults.standard.data(forKey: key),
               let ids = try? JSONDecoder().decode([Int].self, from: data),
               !ids.isEmpty else {
             shows = []
@@ -72,7 +76,7 @@ final class FavoritesViewModel: FavoritesViewModelProtocol {
     func saveShows() {
         let ids = shows.map { $0.id }
         if let data = try? JSONEncoder().encode(ids) {
-            UserDefaults.standard.set(data, forKey: "favorites")
+            UserDefaults.standard.set(data, forKey: key)
         }
     }
 

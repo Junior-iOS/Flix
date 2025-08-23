@@ -190,59 +190,47 @@ final class ShowDetailsView: UIView {
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // ScrollView (não vai até o bottom, deixa espaço para os botões)
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonsStack.topAnchor, constant: -Constants.medium),
 
-            // ContentView
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
-            // Cover Image
             coverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.medium),
             coverImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             coverImageView.widthAnchor.constraint(equalToConstant: 300),
             coverImageView.heightAnchor.constraint(equalToConstant: Constants.coverHeight),
 
-            // Activity Indicator
             activityIndicator.centerXAnchor.constraint(equalTo: coverImageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: coverImageView.centerYAnchor),
 
-            // Title
             titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: Constants.medium),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
 
-            // Genres
             genresLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.small),
             genresLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             genresLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
 
-            // Status
             showInfoStack.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: Constants.small),
             showInfoStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             showInfoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
 
-            // Summary
             summaryLabel.topAnchor.constraint(equalTo: showInfoStack.bottomAnchor, constant: Constants.medium),
             summaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.medium),
             summaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.medium),
             summaryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.medium),
             
-            // Buttons Stack (fixo no bottom)
             buttonsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.medium),
             buttonsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.medium),
             buttonsStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.medium),
 
-            // Episodes Button
             seasonsButton.heightAnchor.constraint(equalToConstant: Constants.large),
-
-            // Cast Button
             castButton.heightAnchor.constraint(equalToConstant: Constants.large),
         ])
     }

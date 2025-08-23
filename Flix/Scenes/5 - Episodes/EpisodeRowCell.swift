@@ -42,9 +42,8 @@ final class EpisodeRowCell: UITableViewCell {
         setup()
     }
 
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
 
     private func setup() {
         collectionView.delegate = self
@@ -61,9 +60,14 @@ final class EpisodeRowCell: UITableViewCell {
     }
 
     private func setupDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Int, Episode>(collectionView: collectionView) { collectionView, indexPath, episode -> UICollectionViewCell? in
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EpisodeCollectionCell.identifier, for: indexPath) as? EpisodeCollectionCell else {
-                print("Failed to dequeue EpisodeCollectionCell")
+        dataSource = UICollectionViewDiffableDataSource<Int, Episode>(collectionView: collectionView) {
+            collectionView,
+            indexPath,
+            episode -> UICollectionViewCell? in
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: EpisodeCollectionCell.identifier,
+                for: indexPath
+            ) as? EpisodeCollectionCell else {
                 return UICollectionViewCell()
             }
 
@@ -73,7 +77,7 @@ final class EpisodeRowCell: UITableViewCell {
     }
 
     func bind(to episodesObservable: Observable<[Episode]>) {
-        disposeBag = DisposeBag() // reinicia sempre que a célula for reutilizada
+        disposeBag = DisposeBag()
         episodesObservable
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] episodes in

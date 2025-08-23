@@ -64,6 +64,7 @@ final class ShowViewController: UIViewController {
                             self?.showView.activityIndicator.startAnimating()
                         } else {
                             self?.showView.activityIndicator.stopAnimating()
+                            self?.refreshControl.endRefreshing()
                         }
                     }
                 }
@@ -71,7 +72,7 @@ final class ShowViewController: UIViewController {
     }
 
     private func configureNavigationBar() {
-        title = "TV Shows"
+        title = viewModel.title
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -108,13 +109,7 @@ final class ShowViewController: UIViewController {
             return
         }
 
-        viewModel.showSubject
-            .subscribe { [weak self] _ in
-                DispatchQueue.main.async {
-                    self?.refreshControl.endRefreshing()
-                }
-            }
-            .disposed(by: disposeBag)
+        viewModel.refreshData()
     }
 
     private func configureDelegates() {

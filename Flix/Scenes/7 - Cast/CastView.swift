@@ -18,6 +18,7 @@ final class CastView: UIView {
         return tableView
     }()
 
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -26,6 +27,7 @@ final class CastView: UIView {
     @available(*, unavailable)
     required init?(coder _: NSCoder) { nil }
 
+    // MARK: - Private Methods
     private func setupView() {
         backgroundColor = .systemBackground
         addSubviews(tableView)

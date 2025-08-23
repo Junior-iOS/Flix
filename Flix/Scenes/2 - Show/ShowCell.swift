@@ -8,9 +8,8 @@
 import SDWebImage
 import UIKit
 
-class ShowCell: UICollectionViewCell {
+final class ShowCell: UICollectionViewCell {
     // MARK: - Properties
-
     lazy var coverImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,14 +48,12 @@ class ShowCell: UICollectionViewCell {
     }
 
     private func setupShadow() {
-        // Configura a sombra para aparecer apenas no trailing e bottom
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 3, height: 3) // Offset para trailing e bottom
+        layer.shadowOffset = CGSize(width: 3, height: 3)
         layer.shadowOpacity = 0.25
         layer.shadowRadius = 6
         layer.masksToBounds = false
 
-        // Garante que a célula tenha um background para a sombra aparecer
         backgroundColor = .clear
 
         // Adiciona um leve padding para a sombra não ser cortada

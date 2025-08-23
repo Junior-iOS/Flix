@@ -45,8 +45,6 @@ final class CastCell: UITableViewCell {
         spacing: 2,
         axis: .vertical
     )
-    
-    var didSelectCast: ((Cast) -> Void)?
 
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

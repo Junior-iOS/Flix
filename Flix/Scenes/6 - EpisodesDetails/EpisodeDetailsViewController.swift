@@ -14,7 +14,6 @@ final class EpisodeDetailsViewController: UIViewController {
 
     // MARK: - Init
     override func loadView() {
-        super.loadView()
         view = detailsEpisodeView
     }
 

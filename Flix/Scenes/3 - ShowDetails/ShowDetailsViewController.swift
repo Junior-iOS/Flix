@@ -27,9 +27,8 @@ final class ShowDetailsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +47,7 @@ final class ShowDetailsViewController: UIViewController {
 
     private func setupFavoriteButton() {
         favoriteButton = UIBarButtonItem(
-            image: UIImage(systemName: "heart"),
+            image: UIImage(icon: .heart),
             style: .plain,
             target: self,
             action: #selector(favoriteButtonTapped)
