@@ -49,6 +49,14 @@ final class ShowSeasonsViewController: UIViewController {
                 seasonsView.apply(items: items)
             }
             .disposed(by: disposeBag)
+        
+        viewModel.errorSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] (error: Error) in
+                guard let self = self else { return }
+                self.showAlert(title: "Erro", message: error.localizedDescription)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func mapToViewSeason(_ season: Season) -> SeasonItem {

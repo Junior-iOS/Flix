@@ -11,6 +11,7 @@ import UIKit
 
 protocol ShowSeasonsViewModelProtocol {
     var seasonsSubject: PublishSubject<[Season]> { get }
+    var errorSubject: PublishSubject<Error> { get }
     var show: TVShow { get }
     var title: String { get }
     func fetchSeasons()
@@ -19,6 +20,7 @@ protocol ShowSeasonsViewModelProtocol {
 final class ShowSeasonsViewModel: ShowSeasonsViewModelProtocol {
     // MARK: - Properties
     let seasonsSubject = PublishSubject<[Season]>()
+    let errorSubject = PublishSubject<any Error>()
     var show: TVShow
     var title = "Seasons"
 
@@ -39,7 +41,10 @@ final class ShowSeasonsViewModel: ShowSeasonsViewModelProtocol {
 
     func fetchSeasons() {
         guard networkMonitor.checkConnection() else {
-            print("❌ Sem conexão com a internet")
+            DispatchQueue.main.async { [weak self] in
+                let noConnectionError = NSError(domain: "NoConnection", code: -1009, userInfo: [NSLocalizedDescriptionKey: "Sem conexão com a internet"])
+                self?.errorSubject.onNext(ServiceError.networkError(noConnectionError))
+            }
             return
         }
 
@@ -53,8 +58,6 @@ final class ShowSeasonsViewModel: ShowSeasonsViewModelProtocol {
     }
 
     private func handleFailure() {
-        // Aqui você pode lidar com erros, como exibir um alerta ou logar o erro
-        print("❌ Erro ao buscar temporadas")
-        seasonsSubject.onError(ServiceError.invalidData)
+        errorSubject.onNext(ServiceError.invalidData)
     }
 }

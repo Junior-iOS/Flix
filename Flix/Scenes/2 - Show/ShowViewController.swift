@@ -46,28 +46,34 @@ final class ShowViewController: UIViewController {
 
     private func setupBindings() {
         disposeBag.insert([
-            viewModel.shows
-                .drive { [weak self] shows in
+            viewModel.showSubject
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] shows in
+                    guard let self = self else { return }
                     var snapshot = NSDiffableDataSourceSnapshot<Section, TVShow>()
                     snapshot.appendSections([.main])
                     snapshot.appendItems(shows)
-                    DispatchQueue.main.async {
-                        self?.showView.dataSource.apply(snapshot, animatingDifferences: true)
-                    }
-                    self?.setNeedsUpdateContentUnavailableConfiguration()
-                },
+                    self.showView.dataSource.apply(snapshot, animatingDifferences: true)
+                    self.setNeedsUpdateContentUnavailableConfiguration()
+                }),
 
             viewModel.isLoading
-                .drive { [weak self] isLoading in
-                    DispatchQueue.main.async {
-                        if isLoading {
-                            self?.showView.activityIndicator.startAnimating()
-                        } else {
-                            self?.showView.activityIndicator.stopAnimating()
-                            self?.refreshControl.endRefreshing()
-                        }
+                .drive(onNext: { [weak self] isLoading in
+                    guard let self = self else { return }
+                    if isLoading {
+                        self.showView.activityIndicator.startAnimating()
+                    } else {
+                        self.showView.activityIndicator.stopAnimating()
+                        self.refreshControl.endRefreshing()
                     }
-                }
+                }),
+
+            viewModel.errorSubject
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] (error: Error) in
+                    guard let self = self else { return }
+                    self.showAlert(title: "Erro", message: error.localizedDescription)
+                })
         ])
     }
 
@@ -94,7 +100,7 @@ final class ShowViewController: UIViewController {
     }
 
     private func configureRefreshControl() {
-        refreshControl.attributedTitle = NSAttributedString(string: "Atualizando shows...")
+        refreshControl.attributedTitle = NSAttributedString(string: "Updating shows...")
         refreshControl.tintColor = .systemOrange
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         showView.collectionView.refreshControl = refreshControl
@@ -102,9 +108,10 @@ final class ShowViewController: UIViewController {
 
     @objc private func refreshData() {
         guard networkMonitor.checkConnection() else {
-            print("❌ Sem conexão - cancelando refresh")
             DispatchQueue.main.async { [weak self] in
                 self?.refreshControl.endRefreshing()
+                let noConnectionError = NSError(domain: "NoConnection", code: -1009, userInfo: [NSLocalizedDescriptionKey: "Sem conexão com a internet"])
+                self?.viewModel.errorSubject.onNext(ServiceError.networkError(noConnectionError))
             }
             return
         }

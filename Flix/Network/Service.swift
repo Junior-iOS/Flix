@@ -26,19 +26,19 @@ enum ServiceError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidData:
-            return "Dados inválidos"
+            return "Invalid Data"
 
         case .networkError(let error):
-            return "Erro de rede: \(error.localizedDescription)"
+            return "Network Error: \(error.localizedDescription)"
 
         case .invalidURL:
-            return "URL inválida"
+            return "Invalid URL"
 
         case .httpError(let code):
-            return "Erro HTTP: \(code)"
+            return "HTTP Error: \(code)"
 
         case .decodingError(let error):
-            return "Erro de decodificação: \(error.localizedDescription)"
+            return "Decoding Error: \(error.localizedDescription)"
         }
     }
 }

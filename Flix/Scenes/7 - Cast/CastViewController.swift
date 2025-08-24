@@ -45,13 +45,21 @@ final class CastViewController: UIViewController {
     }
 
     private func bindViewModel() {
-        viewModel.castSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] cast in
-                self?.viewModel.cast = cast
-                self?.castView.tableView.reloadData()
-            }
-            .disposed(by: disposeBag)
+        disposeBag.insert([
+            viewModel.castSubject
+                .observe(on: MainScheduler.instance)
+                .subscribe { [weak self] cast in
+                    self?.viewModel.cast = cast
+                    self?.castView.tableView.reloadData()
+                },
+            
+            viewModel.errorSubject
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] (error: Error) in
+                    guard let self = self else { return }
+                    self.showAlert(title: "Erro", message: error.localizedDescription)
+                })
+        ])
     }
 }
 

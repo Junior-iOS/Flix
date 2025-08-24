@@ -14,6 +14,7 @@ import UIKit
 protocol CastViewModelProtocol {
     func fetchCast()
     var castSubject: PublishSubject<[Cast]> { get }
+    var errorSubject: PublishSubject<Error> { get }
     var cast: [Cast] { get set }
     var title: String { get }
     var show: TVShow { get }
@@ -28,6 +29,7 @@ final class CastViewModel: CastViewModelProtocol {
     
     // MARK: - Properties
     var castSubject: PublishSubject<[Cast]> = PublishSubject<[Cast]>()
+    let errorSubject = PublishSubject<Error>()
     var show: TVShow
     var cast: [Cast] = []
     
@@ -48,7 +50,10 @@ final class CastViewModel: CastViewModelProtocol {
     
     func fetchCast() {
         guard networkMonitor.checkConnection() else {
-            print("❌ Sem conexão com a internet")
+            DispatchQueue.main.async { [weak self] in
+                let noConnectionError = NSError(domain: "NoConnection", code: -1009, userInfo: [NSLocalizedDescriptionKey: "Sem conexão com a internet"])
+                self?.errorSubject.onNext(ServiceError.networkError(noConnectionError))
+            }
             return
         }
         
@@ -62,8 +67,6 @@ final class CastViewModel: CastViewModelProtocol {
     }
 
     private func handleFailure() {
-        // Aqui você pode lidar com erros, como exibir um alerta ou logar o erro
-        print("❌ Erro ao buscar temporadas")
-        castSubject.onError(ServiceError.invalidData)
+        errorSubject.onNext(ServiceError.invalidData)
     }
 }
