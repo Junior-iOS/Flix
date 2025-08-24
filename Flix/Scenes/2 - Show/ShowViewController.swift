@@ -88,7 +88,6 @@ final class ShowViewController: UIViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
 
-        // Estilo da barra de busca para branco
         searchController.searchBar.barStyle = .black
         searchController.searchBar.tintColor = .label
         searchController.searchBar.searchTextField.textColor = .label

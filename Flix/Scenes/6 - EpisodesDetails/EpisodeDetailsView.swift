@@ -96,13 +96,16 @@ final class EpisodeDetailsView: UIView {
         arrangedSubviews: durationStack, ratingStack,
         axis: .horizontal
     )
-
-    private lazy var summaryLabel = NJLabel(
-        textColor: .white,
-        fontSize: 16,
-        fontWeight: .semibold,
-        numberOfLines: 0
-    )
+    
+    private lazy var summaryTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.isEditable = false
+        textView.backgroundColor = .clear
+        textView.textColor = .white
+        textView.font = .systemFont(ofSize: 16, weight: .semibold)
+        return textView
+    }()
 
     lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -134,7 +137,7 @@ final class EpisodeDetailsView: UIView {
             episodeImage,
             episodeTitleLabel,
             showInfoStack,
-            summaryLabel,
+            summaryTextView,
             activityIndicator
         )
     }
@@ -158,10 +161,10 @@ final class EpisodeDetailsView: UIView {
             showInfoStack.leadingAnchor.constraint(equalTo: episodeTitleLabel.leadingAnchor),
             showInfoStack.trailingAnchor.constraint(equalTo: episodeTitleLabel.trailingAnchor),
 
-            summaryLabel.topAnchor.constraint(equalTo: showInfoStack.bottomAnchor, constant: Constants.padding),
-            summaryLabel.leadingAnchor.constraint(equalTo: showInfoStack.leadingAnchor),
-            summaryLabel.trailingAnchor.constraint(equalTo: showInfoStack.trailingAnchor),
-            summaryLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            summaryTextView.topAnchor.constraint(equalTo: showInfoStack.bottomAnchor, constant: Constants.padding),
+            summaryTextView.leadingAnchor.constraint(equalTo: showInfoStack.leadingAnchor),
+            summaryTextView.trailingAnchor.constraint(equalTo: showInfoStack.trailingAnchor),
+            summaryTextView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
@@ -171,7 +174,7 @@ final class EpisodeDetailsView: UIView {
         airDateLabel.text = self.dateFormat(text: "Aired in", episode.airdate ?? "N/A")
         ratingImageView.setRating(episode.rating.average ?? 0)
         ratingLabel.text = "\(episode.rating.average ?? 0)"
-        summaryLabel.text = episode.summary?.removingHTMLOccurances
+        summaryTextView.text = episode.summary?.removingHTMLOccurances
 
         if let urlString = episode.image?.original, let url = URL(string: urlString) {
             episodeImage.sd_setImage(
