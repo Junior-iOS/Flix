@@ -36,6 +36,7 @@ final class EpisodesViewController: UIViewController {
         super.viewDidLoad()
         title = "Episodes"
         setupTable()
+        setupBindings()
     }
 
     init(viewModel: EpisodesViewModelProtocol) {
@@ -46,6 +47,7 @@ final class EpisodesViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder _: NSCoder) { nil }
 
+    // MARK: - Private Methods
     private func setupTable() {
         episodesView.tableView.showsVerticalScrollIndicator = false
 
@@ -56,6 +58,16 @@ final class EpisodesViewController: UIViewController {
         episodesView.tableView.register(EpisodeRowCell.self, forCellReuseIdentifier: EpisodeRowCell.identifier)
         episodesView.tableView.dataSource = self
         episodesView.tableView.delegate = self
+    }
+    
+    private func setupBindings() {
+        viewModel.onErrorSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] (error: Error) in
+                guard let self = self else { return }
+                self.showAlert(title: "Error", message: error.localizedDescription)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

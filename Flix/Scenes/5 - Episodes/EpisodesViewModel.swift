@@ -15,6 +15,7 @@ protocol EpisodesViewModelProtocol {
     var show: TVShow { get }
     var season: ShowSeasonsView.SeasonItem { get }
     var title: String { get }
+    var onErrorSubject: PublishSubject<Error> { get }
     func fetchEpisodes()
 }
 
@@ -24,6 +25,7 @@ final class EpisodesViewModel: EpisodesViewModelProtocol {
     let episodesRelay = BehaviorRelay<[Episode]>(value: [])
     var show: TVShow
     var season: SeasonItem
+    var onErrorSubject = PublishSubject<Error>()
 
     // MARK: - Private Properties
     private let service: ServiceProtocol
@@ -66,8 +68,7 @@ final class EpisodesViewModel: EpisodesViewModelProtocol {
     }
 
     private func handleFailure() {
-        // Aqui você pode lidar com erros, como exibir um alerta ou logar o erro
-        print("❌ Erro ao buscar episódios")
         episodesRelay.accept([])
+        onErrorSubject.onNext(ServiceError.invalidData)
     }
 }
