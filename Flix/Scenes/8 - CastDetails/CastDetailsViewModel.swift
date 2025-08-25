@@ -17,6 +17,7 @@ protocol CastDetailsViewModelProtocol {
     var showStar: Bool { get }
     var shouldApplyGrayScale: Bool { get }
     var urlString: String { get }
+    var wikipediaURL: String { get }
 }
 
 final class CastDetailsViewModel: CastDetailsViewModelProtocol {
@@ -29,6 +30,9 @@ final class CastDetailsViewModel: CastDetailsViewModelProtocol {
     let showStar: Bool
     let shouldApplyGrayScale: Bool
     let urlString: String
+    var wikipediaURL: String {
+        makeWikipediaURL(from: nameText)
+    }
 
     // MARK: - Init
     init(person: Person) {
@@ -90,5 +94,10 @@ final class CastDetailsViewModel: CastDetailsViewModelProtocol {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year], from: birthDate, to: endDate)
         return components.year
+    }
+    
+    private func makeWikipediaURL(from name: String) -> String {
+        let formattedName = name.replacingOccurrences(of: " ", with: "_")
+        return "https://en.wikipedia.org/wiki/\(formattedName)"
     }
 }

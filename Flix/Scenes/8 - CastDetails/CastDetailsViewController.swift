@@ -46,4 +46,10 @@ extension CastDetailsViewController: CastDetailsViewDelegate {
         let safariVC = SFSafariViewController(url: url)
         present(safariVC, animated: true, completion: nil)
     }
+    
+    func didTapWikipedia() {
+        guard let url = URL(string: viewModel.wikipediaURL) else { return }
+        let safariVC = SFSafariViewController(url: url)
+        present(safariVC, animated: true, completion: nil)
+    }
 }

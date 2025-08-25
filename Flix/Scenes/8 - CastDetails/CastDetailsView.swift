@@ -10,6 +10,7 @@ import UIKit
 import NJKit
 
 protocol CastDetailsViewDelegate: AnyObject {
+    func didTapWikipedia()
     func didTapTvmaze()
 }
 
@@ -93,6 +94,18 @@ final class CastDetailsView: UIView {
         alignment: .center
     )
     
+    private lazy var wikipediaButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Visit Wikipedia", for: .normal)
+        button.setTitleColor(.label, for: .normal)
+        button.layer.cornerRadius = 8
+        button.layer.masksToBounds = true
+        button.backgroundColor = .systemGray6
+        button.addTarget(self, action: #selector(handleVisitWikipedia), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var tvMazeButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -104,6 +117,13 @@ final class CastDetailsView: UIView {
         button.addTarget(self, action: #selector(handleVisitTvmaze), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var buttonStack = NJStackView(
+        arrangedSubviews: wikipediaButton, tvMazeButton,
+        spacing: Constants.medium,
+        axis: .horizontal,
+        distribution: .fillEqually
+    )
     
     weak var delegate: CastDetailsViewDelegate?
     
@@ -127,7 +147,7 @@ final class CastDetailsView: UIView {
             coverImageView,
             nameStack,
             lifeStack,
-            tvMazeButton
+            buttonStack
         )
         
         NSLayoutConstraint.activate([
@@ -146,11 +166,16 @@ final class CastDetailsView: UIView {
             
             ageLabel.widthAnchor.constraint(equalToConstant: Constants.ageSize),
             
-            tvMazeButton.topAnchor.constraint(equalTo: lifeStack.bottomAnchor, constant: Constants.large),
-            tvMazeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
-            tvMazeButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.large),
-            tvMazeButton.heightAnchor.constraint(equalToConstant: Constants.large)
+            buttonStack.topAnchor.constraint(equalTo: lifeStack.bottomAnchor, constant: Constants.large),
+            buttonStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.large),
+            buttonStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.large),
+            buttonStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.large),
+            buttonStack.heightAnchor.constraint(equalToConstant: Constants.large)
         ])
+    }
+    
+    @objc private func handleVisitWikipedia() {
+        delegate?.didTapWikipedia()
     }
     
     @objc private func handleVisitTvmaze() {
