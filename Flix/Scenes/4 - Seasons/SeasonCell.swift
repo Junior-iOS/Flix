@@ -97,6 +97,6 @@ final class SeasonCell: UICollectionViewCell {
             activityIndicator.stopAnimating()
         }
         badgeLabel.text = "T\(item.seasonNumber)"
-        yearLabel.text = dateFormat(text: "Aired", item.year ?? "N/A")
+        yearLabel.text = dateFormat(text: item.year == nil ? "" :  "Aired", item.year ?? "N/A")
     }
 }
