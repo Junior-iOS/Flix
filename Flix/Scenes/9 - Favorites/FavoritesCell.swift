@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import NJKit
 import SDWebImage
 
 final class FavoritesCell: UITableViewCell {

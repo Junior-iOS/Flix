@@ -5,7 +5,6 @@
 //  Created by NJ Development on 17/08/25.
 //
 
-import NJKit
 import SDWebImage
 import UIKit
 

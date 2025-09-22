@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import NJKit
 
 protocol CastDetailsViewDelegate: AnyObject {
     func didTapWikipedia()

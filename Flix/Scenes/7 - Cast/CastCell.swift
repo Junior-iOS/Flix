@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import NJKit
 
 final class CastCell: UITableViewCell {
     // MARK: - Private Properties

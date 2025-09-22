@@ -5,7 +5,6 @@
 //  Created by NJ Development on 15/08/25.
 //
 
-import NJKit
 import UIKit
 
 final class SeasonCell: UICollectionViewCell {
